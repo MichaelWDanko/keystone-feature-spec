@@ -1,58 +1,80 @@
-# Feature Spec
+# Keystone
 
-Feature Spec is a Markdown-native framework for documenting selected essential
-behavior that a project currently supports and intends to preserve. It gives
-maintainers and software agents a durable source of truth for those feature
-requirements without requiring arbitrary IDs or a second machine-readable
-catalog. It does not need to describe everything the project can do.
+**Keep essential feature requirements beside the code.**
 
-Specifications use flat, dot-separated namespaces:
+Keystone records the essential behavior a project intends to preserve. It does
+not need to describe everything. Tests alone cannot protect a defined feature:
+an agent can remove the behavior and its tests while leaving the remaining
+suite green. Keystone keeps selected requirements outside the implementation so
+people and coding agents can review what must remain before changing code.
+
+- **Tests answer:** Does the code behave as expected?
+- **Keystone answers:** Does the project still preserve its defined features?
+
+## Getting started
+
+Give [`agent-prompt.md`](agent-prompt.md) to a coding agent. It drafts the
+feature context, adds `KEYSTONE.md`, updates existing agent guidance, asks
+before creating `AGENTS.md`, and proposes a focused set of essential
+requirements for approval.
+
+The setup adds:
 
 ```text
-feature-spec/
-  Settings.md
-  Settings.Accounts.md
-  Settings.Accounts.Removal.md
+your-project/
+├── KEYSTONE.md
+├── AGENTS.md  (existing or approved)
+└── feature-spec/
+    ├── Settings.md
+    ├── Settings.Accounts.md
+    └── Search.md
 ```
 
-Each document inherits the normative requirements of its existing namespace
-parents. `Settings.Accounts.Removal`, for example, inherits `Settings` and
-`Settings.Accounts`. A child can add or strengthen requirements but cannot
-silently weaken them.
+## `KEYSTONE.md` explains the project and guides agents
 
-Root `KEYSTONE.md` also records the feature context needed to choose those
-namespaces: what is being built, which surfaces or runtimes are distinct, and
-which behavior they share. It can stand alone in a new project while remaining
-compatible with `README.md` as the human-facing overview and `AGENTS.md` as
-repository-wide working guidance.
+This root-level file can explain what is being built, distinguish relevant
+surfaces, and map them to feature names. It stays compatible with `README.md`
+as the human-facing overview and `AGENTS.md` as repository-wide working
+guidance.
 
-## Why Feature Spec
+For example, a native Mac app with a local MCP surface could explain that:
 
-Implementation tests can pass after an agent removes both a feature and its
-tests. Feature Spec keeps essential feature contracts outside the implementation
-so a green test suite cannot redefine specified behavior by omission. Planned
-work and retired behavior stay outside the active specification.
+```text
+Mail.*  describes behavior shared across both surfaces.
+App.*   describes the native Mac experience.
+MCP.*   describes the local MCP surface.
+```
 
-The format is designed to be:
+Read the full [Keystone agent guidance](KEYSTONE.md).
 
-- readable and editable as ordinary Markdown;
-- predictable for agents to resolve and navigate;
-- portable across repositories and operating systems;
-- composable through namespace inheritance;
-- verifiable without duplicating content into YAML or JSON; and
-- suitable for generated coverage and documentation tooling.
+## Describe the features that must stay
 
-## Start here
+You do not need to document every feature. For each one you want to protect,
+create a Markdown file named after the feature. Describe what it must do, not
+how the code is built.
 
-- [Keystone agent guidance](KEYSTONE.md)
-- [Framework specification](SPEC.md)
-- [Worked example](examples/feature-spec/Settings.Accounts.md)
-- [Contributing](CONTRIBUTING.md)
+```markdown
+# Settings.Accounts
+
+## Requirements
+
+- Every configured account MUST appear exactly once.
+- Users MUST be able to add, edit, recover, and remove accounts.
+- Removing one account MUST NOT modify another account.
+```
+
+Need to describe something more specific? Add another part to the filename,
+separated by a dot. `Settings.Accounts.Removal.md` includes the requirements
+from `Settings.md` and `Settings.Accounts.md` because its name starts with those
+names. The new file only needs the added requirements for removing an account.
+
+Read the [full specification](SPEC.md) or the
+[worked example](examples/feature-spec/Settings.Accounts.md).
 
 ## Repository map
 
 - Root Markdown files define Keystone and explain how to adopt it.
-- [`examples/`](examples/) contains a small example feature specification set.
+- [`examples/`](examples/) contains a small example Keystone specification set.
 - [`scripts/`](scripts/) contains the validator and website renderer.
 - [`tests/`](tests/) contains validator tests.
 - [`site/`](site/) contains only the static website and its generated
@@ -60,21 +82,21 @@ The format is designed to be:
 
 Open [`site/index.html`](site/index.html) to view the website locally.
 
-Validate the included example repository:
+## Validate the examples
 
 ```sh
 python3 scripts/validate_feature_spec.py examples/feature-spec
+python3 -m unittest discover -s tests
 ```
 
 The validator uses only the Python standard library.
 
 ## Current status
 
-Feature Spec is an early framework proposal. Its namespace, inheritance, and
-exception rules are usable now. The initial validator checks document names,
-headings, removed sections, parent declarations, related-spec references, and
-exception sources. Test-coverage discovery and effective-spec rendering are
-planned next.
+Keystone is an early framework proposal. Its filename, inheritance, and
+exception rules are usable now. The validator checks document names, headings,
+removed sections, parent declarations, related references, and exception
+sources.
 
 ## License
 
