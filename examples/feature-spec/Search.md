@@ -1,10 +1,6 @@
 # Search
 
-Defines requirements shared by product search experiences.
-
-## Status
-
-Implemented
+Defines requirements shared by search experiences governed by Keystone.
 
 ## Requirements
 

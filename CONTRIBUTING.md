@@ -1,17 +1,20 @@
 # Contributing
 
-Feature Spec is being developed as a portable product-requirements framework.
+Feature Spec is being developed as a portable feature-requirements framework.
 Contributions should improve the format without making maintainers author the
-same product intent in multiple representations.
+same feature intent in multiple representations.
 
 ## Principles
 
 - Markdown is the authored source of truth.
 - Canonical names come from filenames; contributors do not invent IDs.
 - Parent inheritance is structural and deterministic.
-- Requirements describe product intent rather than current implementation.
+- Requirements describe selected essential behavior that is currently
+  implemented, supported, and intended to remain, not implementation details.
+- Planned, deferred, and retired behavior stays outside the active
+  specification.
 - Generated indexes and reports must never become additional authored sources.
-- Tooling should remain language- and product-neutral.
+- Tooling should remain language- and domain-neutral.
 
 ## Development
 
@@ -29,7 +32,7 @@ python3 -m unittest discover -s tests
 
 When changing the framework:
 
-1. Update `SPECIFICATION.md`.
+1. Update `SPEC.md`.
 2. Add or revise a minimal example demonstrating the behavior.
 3. Update validation when the rule can be checked deterministically.
 4. Add tests for validator behavior.
@@ -43,10 +46,10 @@ For significant syntax or inheritance changes, open a proposal describing:
 - a concrete before-and-after example;
 - inheritance and compatibility implications;
 - deterministic validation opportunities; and
-- why the change does not require duplicated product content.
+- why the change does not require duplicated feature content.
 
 ## Public-repository safety
 
 Examples must be fictional and contain no private customer information,
-credentials, tokens, internal URLs, or proprietary product requirements copied
+credentials, tokens, internal URLs, or proprietary feature requirements copied
 without permission.

@@ -1,10 +1,6 @@
 # Settings
 
-Defines requirements shared by every product setting.
-
-## Status
-
-Implemented
+Defines requirements shared by every setting governed by Keystone.
 
 ## Requirements
 
@@ -14,9 +10,3 @@ Implemented
 - Every setting MUST be keyboard accessible.
 - Validation failures MUST preserve the last valid configuration.
 - Validation failures MUST identify a recovery action.
-
-## Verification
-
-- Navigation and controls work using only a keyboard.
-- Persisted changes survive a relaunch.
-- Invalid changes do not replace valid configuration.

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Keystone is a Markdown-native feature contract that helps people and coding agents preserve essential behavior.">
+    <meta name="theme-color" content="#fffefa">
+    <title>Keystone — A feature contract in plain Markdown</title>
+    <link rel="stylesheet" href="styles.css?rev=20260720-17">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="Keystone home">
+        <span class="wordmark-mark" aria-hidden="true">K</span>
+        <span>Keystone</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#why">Why</a>
+        <a href="#start">Getting started</a>
+        <a href="#feature-example">Example</a>
+        <a class="spec-link" href="specification.html">Specification</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <header class="hero-heading">
+          <h1>Keep essential feature requirements beside the code.</h1>
+        </header>
+        <div class="hero-detail">
+          <div class="hero-copy" id="why">
+            <p class="hero-lede">Keystone records the essential behavior a project intends to preserve. It does not need to describe everything. Tests alone cannot protect a defined feature: an agent can remove the behavior and its tests while leaving the remaining suite green. Keystone keeps selected requirements outside the implementation so people and coding agents can review what must remain before changing code.</p>
+            <div class="comparison hero-comparison" aria-label="Comparison of tests and Keystone">
+              <div>
+                <span class="comparison-label">Tests answer</span>
+                <strong>Does the code behave as expected?</strong>
+              </div>
+              <div>
+                <span class="comparison-label">Keystone answers</span>
+                <strong>Does the project still preserve its defined features?</strong>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <a class="text-link" href="specification.html">Read the full specification</a>
+            </div>
+          </div>
+
+          <figure class="spec-example">
+            <figcaption>
+              <span>feature-spec/Settings.Accounts.md</span>
+              <span>plain Markdown</span>
+            </figcaption>
+            <pre><code><span class="token-heading"># Settings.Accounts</span>
+
+<span class="token-heading">## Requirements</span>
+- Every configured account <strong>MUST</strong> appear exactly once.
+- Users <strong>MUST</strong> be able to add, edit, recover,
+  and remove accounts.
+- Removing one account <strong>MUST NOT</strong> modify another.</code></pre>
+          </figure>
+        </div>
+      </section>
+
+      <section class="onboarding-section section" id="start">
+        <div class="onboarding-intro">
+          <h2>Getting started</h2>
+          <p>Give <a href="../agent-prompt.md"><code>agent-prompt.md</code></a> to a coding agent. It drafts the feature context, adds <code>KEYSTONE.md</code>, updates existing agent guidance, asks before creating <code>AGENTS.md</code>, and proposes a focused set of essential feature specifications for approval.</p>
+        </div>
+
+        <div class="onboarding-grid">
+          <article class="copy-card setup-prompt-card">
+            <div class="copy-card-heading">
+              <div>
+                <span class="step-label">Setup prompt</span>
+                <h3>Give this file to your coding agent</h3>
+              </div>
+            </div>
+            <div class="prompt-file-actions">
+              <a class="button button-primary" href="../agent-prompt.md">Open setup prompt <span aria-hidden="true">→</span></a>
+              <button class="button copy-link-button" type="button" data-copy-url="../agent-prompt.md">Copy prompt link</button>
+            </div>
+            <p class="prompt-file-note">The self-contained file includes the complete setup contract, the content for <code>KEYSTONE.md</code>, and the instruction to update agent guidance files.</p>
+          </article>
+
+          <article class="project-card">
+            <div class="project-card-heading">
+              <span class="step-label">What gets added</span>
+              <strong>Project structure</strong>
+            </div>
+            <pre class="project-tree" aria-label="Example project file structure"><code>your-project/
+├── KEYSTONE.md
+├── AGENTS.md  (existing or approved)
+└── feature-spec/
+    ├── Settings.md
+    ├── Settings.Accounts.md
+    └── Search.md</code></pre>
+          </article>
+        </div>
+        <p class="copy-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="guide-section example-section section" id="agent-prompt">
+        <header class="section-heading">
+          <h2><code>KEYSTONE.md</code> explains the project and guides agents.</h2>
+        </header>
+        <div class="section-detail">
+          <div class="detail-copy">
+            <p>This root-level file can explain what is being built, distinguish relevant surfaces, and map them to feature namespaces. It stays compatible with <code>README.md</code> as the human-facing overview and <code>AGENTS.md</code> as repository-wide working guidance.</p>
+          </div>
+          <div class="spec-sample tall-sample">
+            <div class="sample-toolbar"><span>KEYSTONE.md</span><span>standard agent instructions</span></div>
+            <pre><code># Keystone agent guidance
+
+This project uses Keystone to keep essential feature requirements
+separate from their implementation. Treat the Markdown documents
+in `feature-spec/` as behavior the project intends to preserve.
+
+## Feature context
+
+This project is a native macOS mail app with a bundled local MCP
+surface. The app provides the native reading and writing
+experience. MCP lets approved local clients work with the same
+mail domain through permissioned tools.
+
+- `Mail.*` describes behavior shared across both surfaces.
+- `App.*` describes the native macOS experience.
+- `MCP.*` describes the local MCP surface.
+
+## Before changing a Keystone feature
+
+Before changing a documented feature, an agent MUST:
+
+1. identify the most specific affected specification;
+2. read its namespace parents from least to most specific;
+3. read the target and its related specifications;
+4. identify inherited requirements and exceptions;
+5. make implementation and tests conform; and
+6. report conflicts instead of weakening a requirement.
+
+## Navigate `feature-spec/` efficiently
+
+Do not load every file in `feature-spec/`. Start with filenames,
+derive the parent chain from the dot-separated name, and open
+only that chain and relevant related specifications.</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="guide-section example-section section" id="feature-example">
+        <header class="section-heading">
+          <h2>Describe the features that must stay.</h2>
+        </header>
+        <div class="section-detail">
+          <div class="detail-copy">
+            <p>You do not need to document every feature. For each one you want to protect, create a Markdown file named after the feature. Describe what it must do, not how the code is built.</p>
+            <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Settings.Accounts.Removal.md</code> includes the requirements from <code>Settings.md</code> and <code>Settings.Accounts.md</code> because its name starts with those names. The new file only needs the added requirements for removing an account.</p>
+          </div>
+          <div class="spec-sample">
+            <div class="sample-toolbar"><span>feature-spec/Settings.Accounts.md</span><span>essential feature requirements</span></div>
+            <pre><code># Settings.Accounts
+
+Defines requirements for viewing and managing configured accounts.
+
+## Requirements
+
+- Every configured account MUST appear exactly once.
+- Each account MUST communicate its provider and usability state.
+- Users MUST be able to add, edit, validate, recover, and remove
+  accounts.
+- Credentials MUST use protected platform credential storage.
+- Removing one account MUST NOT modify another account.
+- Account status MUST NOT rely on color alone.
+
+## Related specifications
+
+- `Search.IndexManagement`</code></pre>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <a class="wordmark" href="#top">
+        <span class="wordmark-mark" aria-hidden="true">K</span>
+        <span>Keystone</span>
+      </a>
+      <p>Open source · MIT License</p>
+    </footer>
+    <script>
+      const copyStatus = document.querySelector('.copy-status');
+
+      async function copyText(text) {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        const field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.opacity = '0';
+        document.body.appendChild(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        if (!copied) throw new Error('Copy failed');
+      }
+
+      document.querySelectorAll('[data-copy-target]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const target = document.getElementById(button.dataset.copyTarget);
+          try {
+            await copyText(target.textContent.trim());
+            copyStatus.textContent = `${button.textContent.replace('Copy', '').trim() || 'Text'} copied.`;
+            button.textContent = 'Copied';
+          } catch {
+            copyStatus.textContent = 'Copy failed. Select the text and copy it manually.';
+          }
+        });
+      });
+
+      document.querySelectorAll('[data-copy-url]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const url = new URL(button.dataset.copyUrl, window.location.href).href;
+          try {
+            await copyText(url);
+            copyStatus.textContent = 'Link copied.';
+            button.textContent = 'Copied';
+          } catch {
+            copyStatus.textContent = 'Copy failed. Open the file and copy its address manually.';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

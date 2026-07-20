@@ -13,6 +13,7 @@ from pathlib import Path
 NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9-]*(?:\.[A-Za-z][A-Za-z0-9-]*)*$")
 REFERENCE_PATTERN = re.compile(r"^- `([^`]+)`\s*$")
 SOURCE_PATTERN = re.compile(r"^Source:\s*`([^`]+)`\s*$")
+REMOVED_SECTIONS = {"Status", "Verification"}
 
 
 @dataclass(frozen=True)
@@ -77,6 +78,21 @@ def validate_references(documents: dict[str, Document]) -> list[str]:
     return errors
 
 
+def validate_sections(documents: dict[str, Document]) -> list[str]:
+    errors: list[str] = []
+    for document in documents.values():
+        for number, line in enumerate(document.lines, start=1):
+            if not line.startswith("## "):
+                continue
+            title = line.removeprefix("## ")
+            if title in REMOVED_SECTIONS:
+                errors.append(
+                    f"{document.path}:{number}: {title!r} is not a Feature Spec "
+                    "section; express current supported behavior as requirements"
+                )
+    return errors
+
+
 def validate_exceptions(documents: dict[str, Document]) -> list[str]:
     errors: list[str] = []
     for document in documents.values():
@@ -104,6 +120,7 @@ def main() -> int:
         return 2
 
     documents, errors = load_documents(root)
+    errors.extend(validate_sections(documents))
     errors.extend(validate_references(documents))
     errors.extend(validate_exceptions(documents))
 

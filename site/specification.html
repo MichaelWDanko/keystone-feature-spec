@@ -1,0 +1,207 @@
+<!-- Generated from SPEC.md by scripts/render_specification.py. -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The Keystone feature specification framework, rendered for the web.">
+    <meta name="theme-color" content="#fffefa">
+    <title>Keystone specification</title>
+    <link rel="stylesheet" href="styles.css?rev=20260720-17">
+  </head>
+  <body class="specification-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="index.html#top" aria-label="Keystone home">
+        <span class="wordmark-mark" aria-hidden="true">K</span>
+        <span>Keystone</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="index.html#why">Why</a>
+        <a href="index.html#start">Getting started</a>
+        <a href="index.html#feature-example">Example</a>
+        <a class="spec-link" aria-current="page" href="#main">Specification</a>
+      </nav>
+    </header>
+
+    <main class="specification-main" id="main">
+      <header class="specification-intro">
+        <h1>Keystone specification</h1>
+        <p>This page is generated from <code>SPEC.md</code>, the canonical source for the framework.</p>
+        <a class="text-link" href="../SPEC.md">View the raw Markdown source</a>
+      </header>
+
+      <div class="specification-layout">
+        <aside class="specification-toc" aria-label="Specification contents">
+          <strong>On this page</strong>
+          <ol>
+            <li><a href="#1-feature-context">1. Feature context</a></li>
+            <li><a href="#2-repository-layout">2. Repository layout</a></li>
+            <li><a href="#3-canonical-names">3. Canonical names</a></li>
+            <li><a href="#4-parent-inheritance">4. Parent inheritance</a></li>
+            <li><a href="#5-document-structure">5. Document structure</a></li>
+            <li><a href="#6-requirements">6. Requirements</a></li>
+            <li><a href="#7-exceptions">7. Exceptions</a></li>
+            <li><a href="#8-related-specifications">8. Related specifications</a></li>
+            <li><a href="#9-tests-and-implementation">9. Tests and implementation</a></li>
+            <li><a href="#10-agent-resolution">10. Agent resolution</a></li>
+            <li><a href="#11-conformance">11. Conformance</a></li>
+          </ol>
+        </aside>
+
+        <article class="specification-article">
+          <p>This document defines the Feature Spec authoring format. The key words <code>MUST</code>, <code>MUST NOT</code>, <code>REQUIRED</code>, <code>SHOULD</code>, <code>SHOULD NOT</code>, and <code>MAY</code> are normative.</p>
+          <p>A Feature Spec collection describes selected essential behavior that is currently implemented, supported, and intended to remain. It need not describe every feature in a project. Planned work, deferred ideas, and retired behavior belong in roadmaps, issue trackers, or project history rather than the active specification.</p>
+          <section id="1-feature-context">
+          <h2>1. Feature context</h2>
+          <p>A project SHOULD use root <code>KEYSTONE.md</code> to describe enough feature context for a person or agent to understand what is being built before choosing a feature namespace. The context SHOULD identify:</p>
+          <ul>
+            <li>the project&#x27;s purpose and intended users, when relevant;</li>
+            <li>distinct surfaces, executables, services, or runtimes;</li>
+            <li>behavior shared across those surfaces; and</li>
+            <li>the namespace boundaries implied by those distinctions.</li>
+          </ul>
+          <p><code>KEYSTONE.md</code> MAY be self-contained when a project is starting fresh. When <code>README.md</code> or <code>AGENTS.md</code> already exists, the files have compatible roles:</p>
+          <ul>
+            <li><code>README.md</code> is the human-facing overview, setup, and usage guide;</li>
+            <li><code>AGENTS.md</code> contains repository-wide working instructions; and</li>
+            <li><code>KEYSTONE.md</code> contains durable feature context plus instructions for finding and applying essential feature requirements.</li>
+          </ul>
+          <p>The files MAY summarize the same facts, but they MUST NOT contradict one another. <code>KEYSTONE.md</code> SHOULD contain enough context to choose a namespace without requiring an agent to reverse-engineer system boundaries from source files. It MAY link to another document for deeper operational or architectural detail.</p>
+          <p>For example, a native macOS mail app with a bundled local MCP surface could describe three namespace boundaries before defining individual features:</p>
+          <pre><code>Mail.*  behavior shared by the project&#x27;s mail domain
+App.*   behavior specific to the native macOS experience
+MCP.*   behavior specific to the local MCP surface</code></pre>
+          <p>This context prevents app presentation requirements and MCP transport requirements from being mixed merely because both surfaces share mail-domain services.</p>
+          </section>
+          <section id="2-repository-layout">
+          <h2>2. Repository layout</h2>
+          <p>A project adopts Feature Spec by creating a <code>feature-spec/</code> directory. Every Markdown file directly inside that directory defines one specification.</p>
+          <pre><code>feature-spec/
+  Settings.md
+  Settings.Accounts.md
+  Settings.Accounts.Removal.md
+  Search.md
+  Search.IndexManagement.md</code></pre>
+          <p>Specifications MUST use a flat directory. Dots in the filename express the namespace. Directories MUST NOT encode specification inheritance.</p>
+          </section>
+          <section id="3-canonical-names">
+          <h2>3. Canonical names</h2>
+          <p>The canonical name is the filename without the <code>.md</code> extension.</p>
+          <pre><code>Settings.Accounts.md -&gt; Settings.Accounts</code></pre>
+          <p>Each namespace segment MUST contain only ASCII letters, digits, or hyphens and MUST begin with an ASCII letter. Names are case-sensitive.</p>
+          <p>A specification&#x27;s first heading MUST be an H1 whose text exactly matches its canonical name:</p>
+          <pre><code># Settings.Accounts</code></pre>
+          <p>Canonical names replace arbitrary feature identifiers. Requirements, tests, change descriptions, and related specifications SHOULD reference these names.</p>
+          </section>
+          <section id="4-parent-inheritance">
+          <h2>4. Parent inheritance</h2>
+          <p>A specification inherits every normative requirement from each existing parent prefix, ordered from least specific to most specific.</p>
+          <p>The effective specification for <code>Settings.Accounts.Removal</code> is:</p>
+          <ol>
+            <li><code>Settings.md</code>, when present;</li>
+            <li><code>Settings.Accounts.md</code>, when present; and</li>
+            <li><code>Settings.Accounts.Removal.md</code>.</li>
+          </ol>
+          <p>Intermediate parents MAY be absent. Every parent that does exist still applies.</p>
+          <p>A child:</p>
+          <ul>
+            <li>MAY add requirements;</li>
+            <li>MAY make an inherited requirement stricter;</li>
+            <li>MUST NOT silently weaken or contradict an inherited requirement; and</li>
+            <li>MUST declare a justified exception when its behavior cannot satisfy an inherited requirement.</li>
+          </ul>
+          <p>Updating a parent immediately updates the effective requirements of every descendant.</p>
+          </section>
+          <section id="5-document-structure">
+          <h2>5. Document structure</h2>
+          <p>A specification SHOULD use the following sections when applicable:</p>
+          <pre><code># Settings.Accounts
+
+One-paragraph purpose and scope.
+
+## Requirements
+
+- The account list MUST show every configured account.
+
+## Exceptions
+
+### Visible secrets are never restored
+
+Source: `Settings`
+
+Exception: A stored password is not repopulated into the visible field.
+
+Rationale: The interface must not reveal a protected credential.
+
+## Related specifications
+
+- `Onboarding.AccountSetup`
+- `Search.IndexManagement`</code></pre>
+          <p>Only requirements expressed with normative terms are inherited. Purpose text, examples, and rationale remain local unless another document explicitly references them.</p>
+          </section>
+          <section id="6-requirements">
+          <h2>6. Requirements</h2>
+          <p>Requirements SHOULD describe observable feature behavior and durable constraints rather than source files, types, or implementation techniques.</p>
+          <p>Every requirement MUST describe behavior that is currently implemented, supported, essential, and intended to remain. Requirements MUST NOT describe planned, deferred, or retired behavior. A collection need not be exhaustive; undocumented behavior does not automatically require a specification. A mismatch between an active specification and the implementation is a defect to reconcile explicitly; missing implementation or tests do not by themselves authorize changing the specification.</p>
+          <p>Use one requirement per list item when practical. This improves review, referencing, testing, and agent comprehension. Requirements SHOULD be specific, observable, and testable where practical. The specification MUST NOT repeat a requirement as a separate verification instruction.</p>
+          </section>
+          <section id="7-exceptions">
+          <h2>7. Exceptions</h2>
+          <p>Exceptions are escape hatches, not overrides.</p>
+          <p>Each exception MUST:</p>
+          <ol>
+            <li>have its own H3 heading;</li>
+            <li>name an existing ancestor in a <code>Source:</code> field;</li>
+            <li>state the exception;</li>
+            <li>explain the rationale; and</li>
+            <li>remain narrower than the inherited policy it qualifies.</li>
+          </ol>
+          <p>An exception MUST NOT cite a sibling, descendant, or unrelated specification.</p>
+          </section>
+          <section id="8-related-specifications">
+          <h2>8. Related specifications</h2>
+          <p>Related specifications identify non-parent feature contracts that a maintainer or agent should inspect before changing behavior. Each reference MUST resolve to an existing canonical name.</p>
+          <p>Related references do not create inheritance.</p>
+          </section>
+          <section id="9-tests-and-implementation">
+          <h2>9. Tests and implementation</h2>
+          <p>Tests SHOULD reference the most specific applicable canonical name using a language-appropriate comment or annotation:</p>
+          <pre><code>// Feature-Spec: Settings.Accounts.Removal</code></pre>
+          <pre><code># Feature-Spec: Settings.Accounts.Removal</code></pre>
+          <p>Repositories MAY require every specification to have referenced test coverage. A test can reference more than one specification when it provides meaningful evidence for each.</p>
+          <p>Source paths and test filenames SHOULD NOT be maintained in the specification as the primary mapping because they change more often than feature intent.</p>
+          </section>
+          <section id="10-agent-resolution">
+          <h2>10. Agent resolution</h2>
+          <p>Before changing a documented feature, an agent SHOULD:</p>
+          <ol>
+            <li>identify the most specific affected specification;</li>
+            <li>resolve and read all existing namespace parents;</li>
+            <li>read the target specification;</li>
+            <li>read its related specifications;</li>
+            <li>identify the effective inherited requirements;</li>
+            <li>preserve or deliberately update test coverage; and</li>
+            <li>record any approved requirement change or exception in the specification.</li>
+          </ol>
+          <p>Agents MUST NOT treat missing implementation or missing tests as evidence that a documented capability is obsolete.</p>
+          </section>
+          <section id="11-conformance">
+          <h2>11. Conformance</h2>
+          <p>A conforming Feature Spec collection MUST satisfy the filename, H1, namespace, document-section, parent-reference, related-reference, and exception rules in this document. A conforming Keystone setup MUST also give agents feature context that is sufficient to distinguish the surfaces represented by its top-level namespaces.</p>
+          <p>A project MAY adopt stricter conventions without changing the meaning of the base format.</p>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer>
+      <a class="wordmark" href="index.html#top">
+        <span class="wordmark-mark" aria-hidden="true">K</span>
+        <span>Keystone</span>
+      </a>
+      <p>Open source · MIT License</p>
+    </footer>
+  </body>
+</html>

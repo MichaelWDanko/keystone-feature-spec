@@ -65,6 +65,26 @@ class ValidatorTests(unittest.TestCase):
             errors.extend(validator.validate_references(documents))
             self.assertTrue(any("unknown related specification" in error for error in errors))
 
+    def test_rejects_status_section(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write(root, "Settings", "\n## Status\n\nImplemented\n")
+            documents, errors = validator.load_documents(root)
+            errors.extend(validator.validate_sections(documents))
+            self.assertTrue(any("'Status' is not" in error for error in errors))
+
+    def test_rejects_verification_section(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write(
+                root,
+                "Settings",
+                "\n## Verification\n\n- Confirm settings persist.\n",
+            )
+            documents, errors = validator.load_documents(root)
+            errors.extend(validator.validate_sections(documents))
+            self.assertTrue(any("'Verification' is not" in error for error in errors))
+
 
 if __name__ == "__main__":
     unittest.main()
