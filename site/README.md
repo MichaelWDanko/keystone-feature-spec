@@ -4,6 +4,7 @@ This directory contains the static Keystone website.
 
 - `index.html` is the landing page.
 - `styles.css` contains the shared website styles.
+- `CNAME` configures the custom domain.
 - `specification.template.html` is the authored page template.
 - `specification.html` is generated from root [`SPEC.md`](../SPEC.md). Do not
   edit it directly.
@@ -13,3 +14,7 @@ Regenerate the specification page from the repository root:
 ```sh
 python3 scripts/render_specification.py
 ```
+
+GitHub Pages deploys this directory through `.github/workflows/pages.yml`.
+The workflow renders and validates the root specification, then publishes only
+the static site files. Root Markdown files remain the authored sources.
