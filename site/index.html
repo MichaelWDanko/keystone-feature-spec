@@ -49,16 +49,16 @@
 
           <figure class="spec-example">
             <figcaption>
-              <span>feature-spec/Settings.Accounts.md</span>
+              <span>feature-spec/Lending.Loans.md</span>
               <span>plain Markdown</span>
             </figcaption>
-            <pre><code><span class="token-heading"># Settings.Accounts</span>
+            <pre><code><span class="token-heading"># Lending.Loans</span>
 
 <span class="token-heading">## Requirements</span>
-- Every configured account <strong>MUST</strong> appear exactly once.
-- Users <strong>MUST</strong> be able to add, edit, recover,
-  and remove accounts.
-- Removing one account <strong>MUST NOT</strong> modify another.</code></pre>
+- Every active loan <strong>MUST</strong> identify the borrowed item
+  and its due date.
+- An unavailable item <strong>MUST NOT</strong> be checked out.
+- Renewing one loan <strong>MUST NOT</strong> change another.</code></pre>
           </figure>
         </div>
       </section>
@@ -93,9 +93,9 @@
 ├── KEYSTONE.md
 ├── AGENTS.md  (existing or approved)
 └── feature-spec/
-    ├── Settings.md
-    ├── Settings.Accounts.md
-    └── Search.md</code></pre>
+    ├── Lending.md
+    ├── Lending.Loans.md
+    └── Catalog.md</code></pre>
           </article>
         </div>
         <p class="copy-status" role="status" aria-live="polite"></p>
@@ -119,14 +119,14 @@ in `feature-spec/` as behavior the project intends to preserve.
 
 ## Feature context
 
-This project is a native macOS mail app with a bundled local MCP
-surface. The app provides the native reading and writing
-experience. MCP lets approved local clients work with the same
-mail domain through permissioned tools.
+This example project runs a community tool library with a
+self-service kiosk and a staff desk. Members use the kiosk to
+borrow available tools. Staff use a separate workspace to manage
+the catalog and resolve lending issues.
 
-- `Mail.*` describes behavior shared across both surfaces.
-- `App.*` describes the native macOS experience.
-- `MCP.*` describes the local MCP surface.
+- `Lending.*` describes rules shared by borrowing workflows.
+- `Kiosk.*` describes the member-facing kiosk experience.
+- `Staff.*` describes staff-only tools and workflows.
 
 ## Before changing a Keystone feature
 
@@ -155,27 +155,26 @@ only that chain and relevant related specifications.</code></pre>
         <div class="section-detail">
           <div class="detail-copy">
             <p>You do not need to document every feature. For each one you want to protect, create a Markdown file named after the feature. Describe what it must do, not how the code is built.</p>
-            <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Settings.Accounts.Removal.md</code> includes the requirements from <code>Settings.md</code> and <code>Settings.Accounts.md</code> because its name starts with those names. The new file only needs the added requirements for removing an account.</p>
+            <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Lending.Loans.Returns.md</code> includes the requirements from <code>Lending.md</code> and <code>Lending.Loans.md</code> because its name starts with those names. The new file only needs the added requirements for returning an item.</p>
           </div>
           <div class="spec-sample">
-            <div class="sample-toolbar"><span>feature-spec/Settings.Accounts.md</span><span>essential feature requirements</span></div>
-            <pre><code># Settings.Accounts
+            <div class="sample-toolbar"><span>feature-spec/Lending.Loans.md</span><span>essential feature requirements</span></div>
+            <pre><code># Lending.Loans
 
-Defines requirements for viewing and managing configured accounts.
+Defines requirements for borrowing and managing tool loans.
 
 ## Requirements
 
-- Every configured account MUST appear exactly once.
-- Each account MUST communicate its provider and usability state.
-- Users MUST be able to add, edit, validate, recover, and remove
-  accounts.
-- Credentials MUST use protected platform credential storage.
-- Removing one account MUST NOT modify another account.
-- Account status MUST NOT rely on color alone.
+- Every active loan MUST identify the item, member, and due date.
+- An unavailable item MUST NOT be checked out to another member.
+- Users MUST be told why a checkout cannot be completed.
+- Renewing one loan MUST NOT change another loan.
+- Loan status MUST NOT rely on color alone.
+- Returning an item MUST make it available for future loans.
 
 ## Related specifications
 
-- `Search.IndexManagement`</code></pre>
+- `Catalog.Availability`</code></pre>
           </div>
         </div>
       </section>

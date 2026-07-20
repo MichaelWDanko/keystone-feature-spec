@@ -25,9 +25,9 @@ your-project/
 ├── KEYSTONE.md
 ├── AGENTS.md  (existing or approved)
 └── feature-spec/
-    ├── Settings.md
-    ├── Settings.Accounts.md
-    └── Search.md
+    ├── Lending.md
+    ├── Lending.Loans.md
+    └── Catalog.md
 ```
 
 ## `KEYSTONE.md` explains the project and guides agents
@@ -37,12 +37,13 @@ surfaces, and map them to feature names. It stays compatible with `README.md`
 as the human-facing overview and `AGENTS.md` as repository-wide working
 guidance.
 
-For example, a native Mac app with a local MCP surface could explain that:
+For example, a fictional community tool library with a self-service kiosk and
+a staff desk could explain that:
 
 ```text
-Mail.*  describes behavior shared across both surfaces.
-App.*   describes the native Mac experience.
-MCP.*   describes the local MCP surface.
+Lending.*  describes rules shared by all borrowing workflows.
+Kiosk.*    describes the member-facing kiosk experience.
+Staff.*    describes staff-only tools and workflows.
 ```
 
 Read the full [Keystone agent guidance](KEYSTONE.md).
@@ -54,22 +55,22 @@ create a Markdown file named after the feature. Describe what it must do, not
 how the code is built.
 
 ```markdown
-# Settings.Accounts
+# Lending.Loans
 
 ## Requirements
 
-- Every configured account MUST appear exactly once.
-- Users MUST be able to add, edit, recover, and remove accounts.
-- Removing one account MUST NOT modify another account.
+- Every active loan MUST identify the borrowed item and its due date.
+- An unavailable item MUST NOT be checked out to another member.
+- Renewing one loan MUST NOT change another loan.
 ```
 
 Need to describe something more specific? Add another part to the filename,
-separated by a dot. `Settings.Accounts.Removal.md` includes the requirements
-from `Settings.md` and `Settings.Accounts.md` because its name starts with those
-names. The new file only needs the added requirements for removing an account.
+separated by a dot. `Lending.Loans.Returns.md` includes the requirements from
+`Lending.md` and `Lending.Loans.md` because its name starts with those names.
+The new file only needs the added requirements for returning an item.
 
 Read the [full specification](SPEC.md) or the
-[worked example](examples/feature-spec/Settings.Accounts.md).
+[worked example](examples/feature-spec/Lending.Loans.md).
 
 ## Repository map
 

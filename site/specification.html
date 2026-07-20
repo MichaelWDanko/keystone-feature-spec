@@ -69,40 +69,40 @@
             <li><code>KEYSTONE.md</code> contains durable feature context plus instructions for finding and applying essential feature requirements.</li>
           </ul>
           <p>The files MAY summarize the same facts, but they MUST NOT contradict one another. <code>KEYSTONE.md</code> SHOULD contain enough context to choose a namespace without requiring an agent to reverse-engineer system boundaries from source files. It MAY link to another document for deeper operational or architectural detail.</p>
-          <p>For example, a native macOS mail app with a bundled local MCP surface could describe three namespace boundaries before defining individual features:</p>
-          <pre><code>Mail.*  behavior shared by the project&#x27;s mail domain
-App.*   behavior specific to the native macOS experience
-MCP.*   behavior specific to the local MCP surface</code></pre>
-          <p>This context prevents app presentation requirements and MCP transport requirements from being mixed merely because both surfaces share mail-domain services.</p>
+          <p>For example, a fictional community tool library with a self-service kiosk and a staff desk could describe three namespace boundaries before defining individual features:</p>
+          <pre><code>Lending.*  rules shared by all borrowing workflows
+Kiosk.*    behavior specific to the member-facing kiosk
+Staff.*    behavior specific to staff tools and workflows</code></pre>
+          <p>This context keeps shared lending rules separate from requirements that apply only to members or staff.</p>
           </section>
           <section id="2-repository-layout">
           <h2>2. Repository layout</h2>
           <p>A project adopts Feature Spec by creating a <code>feature-spec/</code> directory. Every Markdown file directly inside that directory defines one specification.</p>
           <pre><code>feature-spec/
-  Settings.md
-  Settings.Accounts.md
-  Settings.Accounts.Removal.md
-  Search.md
-  Search.IndexManagement.md</code></pre>
+  Lending.md
+  Lending.Loans.md
+  Lending.Loans.Returns.md
+  Catalog.md
+  Catalog.Availability.md</code></pre>
           <p>Specifications MUST use a flat directory. Dots in the filename express the namespace. Directories MUST NOT encode specification inheritance.</p>
           </section>
           <section id="3-canonical-names">
           <h2>3. Canonical names</h2>
           <p>The canonical name is the filename without the <code>.md</code> extension.</p>
-          <pre><code>Settings.Accounts.md -&gt; Settings.Accounts</code></pre>
+          <pre><code>Lending.Loans.md -&gt; Lending.Loans</code></pre>
           <p>Each namespace segment MUST contain only ASCII letters, digits, or hyphens and MUST begin with an ASCII letter. Names are case-sensitive.</p>
           <p>A specification&#x27;s first heading MUST be an H1 whose text exactly matches its canonical name:</p>
-          <pre><code># Settings.Accounts</code></pre>
+          <pre><code># Lending.Loans</code></pre>
           <p>Canonical names replace arbitrary feature identifiers. Requirements, tests, change descriptions, and related specifications SHOULD reference these names.</p>
           </section>
           <section id="4-parent-inheritance">
           <h2>4. Parent inheritance</h2>
           <p>A specification inherits every normative requirement from each existing parent prefix, ordered from least specific to most specific.</p>
-          <p>The effective specification for <code>Settings.Accounts.Removal</code> is:</p>
+          <p>The effective specification for <code>Lending.Loans.Returns</code> is:</p>
           <ol>
-            <li><code>Settings.md</code>, when present;</li>
-            <li><code>Settings.Accounts.md</code>, when present; and</li>
-            <li><code>Settings.Accounts.Removal.md</code>.</li>
+            <li><code>Lending.md</code>, when present;</li>
+            <li><code>Lending.Loans.md</code>, when present; and</li>
+            <li><code>Lending.Loans.Returns.md</code>.</li>
           </ol>
           <p>Intermediate parents MAY be absent. Every parent that does exist still applies.</p>
           <p>A child:</p>
@@ -117,28 +117,29 @@ MCP.*   behavior specific to the local MCP surface</code></pre>
           <section id="5-document-structure">
           <h2>5. Document structure</h2>
           <p>A specification SHOULD use the following sections when applicable:</p>
-          <pre><code># Settings.Accounts
+          <pre><code># Lending.Loans
 
 One-paragraph purpose and scope.
 
 ## Requirements
 
-- The account list MUST show every configured account.
+- Every active loan MUST identify the borrowed item and its due date.
 
 ## Exceptions
 
-### Visible secrets are never restored
+### Reserved items cannot be renewed
 
-Source: `Settings`
+Source: `Lending`
 
-Exception: A stored password is not repopulated into the visible field.
+Exception: An active loan cannot be renewed when another member has reserved
+the item.
 
-Rationale: The interface must not reveal a protected credential.
+Rationale: The reservation gives the next member a fair chance to borrow the
+item.
 
 ## Related specifications
 
-- `Onboarding.AccountSetup`
-- `Search.IndexManagement`</code></pre>
+- `Catalog.Availability`</code></pre>
           <p>Only requirements expressed with normative terms are inherited. Purpose text, examples, and rationale remain local unless another document explicitly references them.</p>
           </section>
           <section id="6-requirements">
@@ -168,8 +169,8 @@ Rationale: The interface must not reveal a protected credential.
           <section id="9-tests-and-implementation">
           <h2>9. Tests and implementation</h2>
           <p>Tests SHOULD reference the most specific applicable canonical name using a language-appropriate comment or annotation:</p>
-          <pre><code>// Feature-Spec: Settings.Accounts.Removal</code></pre>
-          <pre><code># Feature-Spec: Settings.Accounts.Removal</code></pre>
+          <pre><code>// Feature-Spec: Lending.Loans.Returns</code></pre>
+          <pre><code># Feature-Spec: Lending.Loans.Returns</code></pre>
           <p>Repositories MAY require every specification to have referenced test coverage. A test can reference more than one specification when it provides meaningful evidence for each.</p>
           <p>Source paths and test filenames SHOULD NOT be maintained in the specification as the primary mapping because they change more often than feature intent.</p>
           </section>

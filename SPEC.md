@@ -34,18 +34,18 @@ without requiring an agent to reverse-engineer system boundaries from source
 files. It MAY link to another document for deeper operational or architectural
 detail.
 
-For example, a native macOS mail app with a bundled local MCP surface could
-describe three namespace boundaries before defining individual features:
+For example, a fictional community tool library with a self-service kiosk and
+a staff desk could describe three namespace boundaries before defining
+individual features:
 
 ```text
-Mail.*  behavior shared by the project's mail domain
-App.*   behavior specific to the native macOS experience
-MCP.*   behavior specific to the local MCP surface
+Lending.*  rules shared by all borrowing workflows
+Kiosk.*    behavior specific to the member-facing kiosk
+Staff.*    behavior specific to staff tools and workflows
 ```
 
-This context prevents app presentation requirements and MCP transport
-requirements from being mixed merely because both surfaces share mail-domain
-services.
+This context keeps shared lending rules separate from requirements that apply
+only to members or staff.
 
 ## 2. Repository layout
 
@@ -54,11 +54,11 @@ Markdown file directly inside that directory defines one specification.
 
 ```text
 feature-spec/
-  Settings.md
-  Settings.Accounts.md
-  Settings.Accounts.Removal.md
-  Search.md
-  Search.IndexManagement.md
+  Lending.md
+  Lending.Loans.md
+  Lending.Loans.Returns.md
+  Catalog.md
+  Catalog.Availability.md
 ```
 
 Specifications MUST use a flat directory. Dots in the filename express the
@@ -69,7 +69,7 @@ namespace. Directories MUST NOT encode specification inheritance.
 The canonical name is the filename without the `.md` extension.
 
 ```text
-Settings.Accounts.md -> Settings.Accounts
+Lending.Loans.md -> Lending.Loans
 ```
 
 Each namespace segment MUST contain only ASCII letters, digits, or hyphens and
@@ -79,7 +79,7 @@ A specification's first heading MUST be an H1 whose text exactly matches its
 canonical name:
 
 ```markdown
-# Settings.Accounts
+# Lending.Loans
 ```
 
 Canonical names replace arbitrary feature identifiers. Requirements, tests,
@@ -90,11 +90,11 @@ change descriptions, and related specifications SHOULD reference these names.
 A specification inherits every normative requirement from each existing parent
 prefix, ordered from least specific to most specific.
 
-The effective specification for `Settings.Accounts.Removal` is:
+The effective specification for `Lending.Loans.Returns` is:
 
-1. `Settings.md`, when present;
-2. `Settings.Accounts.md`, when present; and
-3. `Settings.Accounts.Removal.md`.
+1. `Lending.md`, when present;
+2. `Lending.Loans.md`, when present; and
+3. `Lending.Loans.Returns.md`.
 
 Intermediate parents MAY be absent. Every parent that does exist still applies.
 
@@ -114,28 +114,29 @@ descendant.
 A specification SHOULD use the following sections when applicable:
 
 ```markdown
-# Settings.Accounts
+# Lending.Loans
 
 One-paragraph purpose and scope.
 
 ## Requirements
 
-- The account list MUST show every configured account.
+- Every active loan MUST identify the borrowed item and its due date.
 
 ## Exceptions
 
-### Visible secrets are never restored
+### Reserved items cannot be renewed
 
-Source: `Settings`
+Source: `Lending`
 
-Exception: A stored password is not repopulated into the visible field.
+Exception: An active loan cannot be renewed when another member has reserved
+the item.
 
-Rationale: The interface must not reveal a protected credential.
+Rationale: The reservation gives the next member a fair chance to borrow the
+item.
 
 ## Related specifications
 
-- `Onboarding.AccountSetup`
-- `Search.IndexManagement`
+- `Catalog.Availability`
 ```
 
 Only requirements expressed with normative terms are inherited. Purpose text,
@@ -188,11 +189,11 @@ Tests SHOULD reference the most specific applicable canonical name using a
 language-appropriate comment or annotation:
 
 ```swift
-// Feature-Spec: Settings.Accounts.Removal
+// Feature-Spec: Lending.Loans.Returns
 ```
 
 ```python
-# Feature-Spec: Settings.Accounts.Removal
+# Feature-Spec: Lending.Loans.Returns
 ```
 
 Repositories MAY require every specification to have referenced test coverage.

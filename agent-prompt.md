@@ -101,18 +101,18 @@ filenames form a namespace. For example:
 
 ```text
 feature-spec/
-  Settings.md
-  Settings.Accounts.md
-  Settings.Accounts.Removal.md
-  Search.md
-  Search.IndexManagement.md
+  Lending.md
+  Lending.Loans.md
+  Lending.Loans.Returns.md
+  Catalog.md
+  Catalog.Availability.md
 ```
 
-For work on `Settings.Accounts.Removal`, inspect only:
+For work on `Lending.Loans.Returns`, inspect only:
 
-1. `Settings.md`, if it exists;
-2. `Settings.Accounts.md`, if it exists;
-3. `Settings.Accounts.Removal.md`; and
+1. `Lending.md`, if it exists;
+2. `Lending.Loans.md`, if it exists;
+3. `Lending.Loans.Returns.md`; and
 4. relevant files named in the target's `Related specifications` section.
 
 Start with filenames instead of file contents:
@@ -124,8 +124,8 @@ find feature-spec -maxdepth 1 -type f -name '*.md' -print | sort
 Narrow candidates by namespace or feature language before opening files:
 
 ```sh
-find feature-spec -maxdepth 1 -type f -name 'Settings*.md' -print | sort
-rg -n -i 'account removal|remove account' feature-spec
+find feature-spec -maxdepth 1 -type f -name 'Lending*.md' -print | sort
+rg -n -i 'return item|loan return' feature-spec
 ```
 
 Derive the parent chain from the selected file's dot-separated name. Open only
@@ -186,7 +186,7 @@ A specification's first heading MUST be an H1 whose text exactly matches its
 canonical name:
 
 ```markdown
-# Settings.Accounts
+# Lending.Loans
 ```
 
 Requirements, tests, change descriptions, and related specifications SHOULD
@@ -196,11 +196,11 @@ reference canonical names instead of arbitrary feature identifiers.
 
 A specification inherits every normative requirement from each existing parent
 prefix, ordered from least specific to most specific. The effective
-specification for `Settings.Accounts.Removal` is:
+specification for `Lending.Loans.Returns` is:
 
-1. `Settings.md`, when present;
-2. `Settings.Accounts.md`, when present; and
-3. `Settings.Accounts.Removal.md`.
+1. `Lending.md`, when present;
+2. `Lending.Loans.md`, when present; and
+3. `Lending.Loans.Returns.md`.
 
 Intermediate parents MAY be absent. Every parent that exists still applies. A
 child MAY add requirements or make an inherited requirement stricter. It MUST
@@ -212,28 +212,29 @@ justified exception when its behavior cannot satisfy one.
 A specification SHOULD use these sections when applicable:
 
 ```markdown
-# Settings.Accounts
+# Lending.Loans
 
 One-paragraph purpose and scope.
 
 ## Requirements
 
-- The account list MUST show every configured account.
+- Every active loan MUST identify the borrowed item and its due date.
 
 ## Exceptions
 
-### Visible secrets are never restored
+### Reserved items cannot be renewed
 
-Source: `Settings`
+Source: `Lending`
 
-Exception: A stored password is not repopulated into the visible field.
+Exception: An active loan cannot be renewed when another member has reserved
+the item.
 
-Rationale: The interface must not reveal a protected credential.
+Rationale: The reservation gives the next member a fair chance to borrow the
+item.
 
 ## Related specifications
 
-- `Onboarding.AccountSetup`
-- `Search.IndexManagement`
+- `Catalog.Availability`
 ```
 
 Only requirements expressed with normative terms are inherited. Purpose text,
@@ -279,7 +280,7 @@ Tests SHOULD reference the most specific applicable canonical name using a
 language-appropriate comment or annotation, such as:
 
 ```swift
-// Feature-Spec: Settings.Accounts.Removal
+// Feature-Spec: Lending.Loans.Returns
 ```
 
 Repositories MAY require every specification to have referenced test coverage.

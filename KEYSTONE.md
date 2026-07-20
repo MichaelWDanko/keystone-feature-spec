@@ -67,18 +67,18 @@ filenames form a namespace. For example:
 
 ```text
 feature-spec/
-  Settings.md
-  Settings.Accounts.md
-  Settings.Accounts.Removal.md
-  Search.md
-  Search.IndexManagement.md
+  Lending.md
+  Lending.Loans.md
+  Lending.Loans.Returns.md
+  Catalog.md
+  Catalog.Availability.md
 ```
 
-For work on `Settings.Accounts.Removal`, inspect only:
+For work on `Lending.Loans.Returns`, inspect only:
 
-1. `Settings.md`, if it exists;
-2. `Settings.Accounts.md`, if it exists;
-3. `Settings.Accounts.Removal.md`; and
+1. `Lending.md`, if it exists;
+2. `Lending.Loans.md`, if it exists;
+3. `Lending.Loans.Returns.md`; and
 4. relevant files named in the target's `Related specifications` section.
 
 Start with filenames instead of file contents:
@@ -90,8 +90,8 @@ find feature-spec -maxdepth 1 -type f -name '*.md' -print | sort
 Narrow candidates by namespace or feature language before opening files:
 
 ```sh
-find feature-spec -maxdepth 1 -type f -name 'Settings*.md' -print | sort
-rg -n -i 'account removal|remove account' feature-spec
+find feature-spec -maxdepth 1 -type f -name 'Lending*.md' -print | sort
+rg -n -i 'return item|loan return' feature-spec
 ```
 
 Derive the parent chain from the selected file's dot-separated name. Open only
