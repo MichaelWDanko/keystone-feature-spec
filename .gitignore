@@ -1,0 +1,33 @@
+# Environment and secrets
+.env
+.env.*
+*.secret
+*.secrets
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Test and tool caches
+.coverage
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# Generated output
+build/
+dist/
+reports/
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# macOS and editors
+.DS_Store
+.idea/
+.vscode/
