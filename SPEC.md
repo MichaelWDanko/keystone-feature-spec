@@ -1,5 +1,7 @@
 # Feature Spec Framework
 
+Version 0.1.0 (draft)
+
 This document defines the Feature Spec authoring format. The key words `MUST`,
 `MUST NOT`, `REQUIRED`, `SHOULD`, `SHOULD NOT`, and `MAY` are normative.
 
@@ -33,6 +35,12 @@ another. `KEYSTONE.md` SHOULD contain enough context to choose a namespace
 without requiring an agent to reverse-engineer system boundaries from source
 files. It MAY link to another document for deeper operational or architectural
 detail.
+
+Project-specific feature context in `KEYSTONE.md` is descriptive. Essential
+behavior that a project intends to preserve MUST be expressed as normative
+requirements in an applicable file under `feature-spec/`, not only as prose in
+`KEYSTONE.md`. This keeps project and namespace navigation separate from the
+requirements inherited by implementations and tests.
 
 For example, a fictional community tool library with a self-service kiosk and
 a staff desk could describe three namespace boundaries before defining
@@ -108,6 +116,25 @@ A child:
 
 Updating a parent immediately updates the effective requirements of every
 descendant.
+
+### Top-level namespace specifications
+
+A top-level specification has a canonical name with one segment, such as
+`Lending`. Its normative requirements apply to every descendant in that
+namespace. It SHOULD contain only essential behavior shared across that whole
+namespace.
+
+A project with one clear product boundary MAY use a product-named top-level
+specification for project-wide requirements. For example, `CoveMail.md` can
+hold requirements inherited by `CoveMail.Accounts` and `CoveMail.Search`.
+`KEYSTONE.md` would still describe Cove Mail, its runtime surfaces, and what
+those namespaces represent.
+
+A project is not required to have one project-wide root specification. A
+monorepo or system with independent boundaries MAY use several top-level
+namespaces, such as `Desktop`, `Server`, and `Shared`. Choose the smallest
+natural roots that match the behavior being preserved; do not add an artificial
+common parent only to make every specification descend from one file.
 
 ## 5. Document structure
 
@@ -217,6 +244,14 @@ Before changing a documented feature, an agent SHOULD:
 
 Agents MUST NOT treat missing implementation or missing tests as evidence that a
 documented capability is obsolete.
+
+When a requested change adds a new feature or materially expands behavior that
+is not covered by the applicable specifications, an agent MUST ask the user
+whether the behavior should be in Keystone's scope. The agent SHOULD propose
+the smallest suitable namespace, requirements, and related specifications. If
+the user confirms that it should be in scope, the agent MUST receive explicit
+confirmation of the proposed specification change before writing it. If the
+user declines, the behavior remains outside the documented collection.
 
 ## 11. Conformance
 

@@ -30,6 +30,12 @@ in `KEYSTONE.md` for an agent to understand the relevant surfaces and choose the
 right feature namespace without having to infer those boundaries from source
 files.
 
+Project-specific context in this file is descriptive. Essential behavior that
+the project intends to preserve belongs in normative requirements under
+`feature-spec/`. A top-level specification holds requirements shared by its
+namespace descendants; repositories with independent product boundaries may
+use several top-level specifications instead of one artificial common root.
+
 ## Before changing a Keystone feature
 
 An agent MUST:
@@ -45,6 +51,20 @@ An agent MUST:
    specification; and
 6. report any conflict between the requested work and the specifications
    instead of silently weakening, bypassing, or removing a requirement.
+
+## When adding a new feature
+
+When a requested change adds a new feature or materially expands behavior that
+is not covered by the applicable specifications, an agent MUST ask the user
+whether the behavior should be in Keystone's scope. The agent SHOULD include a
+short proposal for the smallest suitable namespace, requirements, and related
+specifications so the user can make that decision.
+
+If the user confirms that the behavior belongs in Keystone, the agent MUST get
+explicit confirmation of the proposed specification change before creating or
+updating the file, then implement and test against the approved requirements.
+If the user declines, the agent MUST NOT create a specification for that
+behavior and SHOULD note that it remains outside Keystone's documented scope.
 
 Keystone is not required to describe every implemented feature. A feature with
 no applicable specification is not governed by Keystone merely because it

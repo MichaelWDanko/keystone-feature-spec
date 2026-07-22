@@ -11,16 +11,22 @@ other file or URL.
    clear.
 2. Draft the `Feature context` section described below. It must identify what
    is being built, its distinct surfaces or runtimes, shared behavior,
-   and the namespace boundaries those distinctions imply. If the repository
-   does not provide enough evidence, or existing documents conflict, ask the
-   user for the missing context instead of guessing.
+   and the namespace boundaries those distinctions imply. Keep this context
+   descriptive. Put essential behavior the project intends to preserve in
+   normative requirements under `feature-spec/`, not only in `KEYSTONE.md`. If
+   the repository does not provide enough evidence, or existing documents
+   conflict, ask the user for the missing context instead of guessing.
 3. Use the embedded authoring contract below to identify currently implemented
    behavior that appears essential and intentionally preserved. Keystone need
    not cover every feature.
 4. Use the drafted surfaces to propose the smallest useful set of dot-namespaced
-   Markdown files under `feature-spec/`. Keep shared behavior in a shared
-   namespace and surface-specific behavior in distinct namespaces. Do not
-   include planned, deferred, deprecated, or retired behavior.
+   Markdown files under `feature-spec/`. When project-wide requirements share
+   one natural product boundary, propose a product-named top-level
+   specification such as `CoveMail.md` so its requirements are inherited by
+   descendants. Do not force one common root when a monorepo or system has
+   independent boundaries. Keep shared behavior in the smallest natural parent
+   namespace and surface-specific behavior in distinct child namespaces. Do
+   not include planned, deferred, deprecated, or retired behavior.
 5. Show the proposed feature context, filenames, and requirements to the user
    for confirmation before creating `KEYSTONE.md` or writing any files under
    `feature-spec/`.
@@ -64,6 +70,12 @@ remove a documented requirement.
 
 {{FEATURE_CONTEXT}}
 
+Project-specific context in this file is descriptive. Essential behavior that
+the project intends to preserve belongs in normative requirements under
+`feature-spec/`. A top-level specification holds requirements shared by its
+namespace descendants; repositories with independent product boundaries may
+use several top-level specifications instead of one artificial common root.
+
 ## Before changing a Keystone feature
 
 An agent MUST:
@@ -79,6 +91,20 @@ An agent MUST:
    specification; and
 6. report any conflict between the requested work and the specifications
    instead of silently weakening, bypassing, or removing a requirement.
+
+## When adding a new feature
+
+When a requested change adds a new feature or materially expands behavior that
+is not covered by the applicable specifications, an agent MUST ask the user
+whether the behavior should be in Keystone's scope. The agent SHOULD include a
+short proposal for the smallest suitable namespace, requirements, and related
+specifications so the user can make that decision.
+
+If the user confirms that the behavior belongs in Keystone, the agent MUST get
+explicit confirmation of the proposed specification change before creating or
+updating the file, then implement and test against the approved requirements.
+If the user declines, the agent MUST NOT create a specification for that
+behavior and SHOULD note that it remains outside Keystone's documented scope.
 
 Keystone is not required to describe every implemented feature. A feature with
 no applicable specification is not governed by Keystone merely because it
@@ -144,16 +170,19 @@ Apply all of these rules when proposing and writing files under
 `feature-spec/`:
 
 ````markdown
-# Feature Spec Framework
+# Keystone feature specification authoring contract
+
+Version 0.1.0 (draft)
 
 The key words `MUST`, `MUST NOT`, `REQUIRED`, `SHOULD`, `SHOULD NOT`, and `MAY`
 are normative.
 
-A Feature Spec collection describes selected essential behavior that is
-currently implemented, supported, and intended to remain. It need not describe
-every feature in the project. Planned work, deferred ideas, and retired behavior
-belong in roadmaps, issue trackers, or project history rather than the active
-specification.
+A `feature-spec/` collection is the set of Markdown specification files in a
+project's `feature-spec/` directory. It describes selected essential behavior
+that is currently implemented, supported, and intended to remain. It need not
+describe every feature in the project. Planned work, deferred ideas, and
+retired behavior belong in roadmaps, issue trackers, or project history rather
+than the active specifications.
 
 ## Feature context
 
@@ -169,6 +198,12 @@ These files MUST NOT contradict one another. `KEYSTONE.md` SHOULD contain
 enough context to choose a namespace without reverse-engineering system
 boundaries from source files. Keep shared behavior in a shared namespace and
 surface-specific behavior in separate namespaces.
+
+Project-specific feature context in `KEYSTONE.md` is descriptive. Essential
+behavior that a project intends to preserve MUST be expressed as normative
+requirements in an applicable file under `feature-spec/`, not only as prose in
+`KEYSTONE.md`. This keeps project and namespace navigation separate from the
+requirements inherited by implementations and tests.
 
 ## Repository layout
 
@@ -206,6 +241,25 @@ Intermediate parents MAY be absent. Every parent that exists still applies. A
 child MAY add requirements or make an inherited requirement stricter. It MUST
 NOT silently weaken or contradict an inherited requirement and MUST declare a
 justified exception when its behavior cannot satisfy one.
+
+### Top-level namespace specifications
+
+A top-level specification has a canonical name with one segment, such as
+`Lending`. Its normative requirements apply to every descendant in that
+namespace. It SHOULD contain only essential behavior shared across that whole
+namespace.
+
+A project with one clear product boundary MAY use a product-named top-level
+specification for project-wide requirements. For example, `CoveMail.md` can
+hold requirements inherited by `CoveMail.Accounts` and `CoveMail.Search`.
+`KEYSTONE.md` would still describe Cove Mail, its runtime surfaces, and what
+those namespaces represent.
+
+A project is not required to have one project-wide root specification. A
+monorepo or system with independent boundaries MAY use several top-level
+namespaces, such as `Desktop`, `Server`, and `Shared`. Choose the smallest
+natural roots that match the behavior being preserved; do not add an artificial
+common parent only to make every specification descend from one file.
 
 ## Document structure
 
@@ -247,8 +301,9 @@ Requirements SHOULD describe observable feature behavior and durable
 constraints rather than source files, types, or implementation techniques.
 Every requirement MUST describe behavior that is currently implemented,
 supported, essential, and intended to remain. Requirements MUST NOT describe
-planned, deferred, or retired behavior. The collection need not be exhaustive;
-undocumented behavior does not automatically require a specification.
+planned, deferred, or retired behavior. The `feature-spec/` collection need not
+be exhaustive; undocumented behavior does not automatically require a
+specification.
 
 A mismatch between the active specification and the implementation is a defect
 to reconcile explicitly. Missing implementation or tests do not authorize
@@ -299,10 +354,17 @@ approved requirement change or exception in the specification.
 Agents MUST NOT treat missing implementation or missing tests as evidence that
 a documented capability is obsolete.
 
+When a requested change adds a new feature or materially expands behavior that
+is not covered by the applicable specifications, an agent MUST ask the user
+whether the behavior should be in Keystone's scope. If the user confirms that
+it should, the agent MUST propose and receive explicit confirmation of the
+smallest suitable specification change before writing it. If the user declines,
+the behavior remains outside the documented collection.
+
 ## Conformance
 
-A conforming collection MUST satisfy the filename, H1, namespace,
-document-section, parent-reference, related-reference, and exception rules
-above. A project MAY adopt stricter conventions without changing the meaning of
-the base format.
+A conforming `feature-spec/` collection MUST satisfy the filename, H1,
+namespace, document-section, parent-reference, related-reference, and exception
+rules above. A project MAY adopt stricter conventions without changing the
+meaning of Keystone's base format.
 ````

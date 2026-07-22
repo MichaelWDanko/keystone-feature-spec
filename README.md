@@ -2,6 +2,9 @@
 
 **Keep essential feature requirements beside the code.**
 
+**Current version: 0.1.0 (draft).** Keystone is usable now, but the framework
+contract can still change before `1.0.0`. See [Versioning Keystone](VERSIONING.md).
+
 Keystone records the essential behavior a project intends to preserve. It does
 not need to describe everything. Tests alone cannot protect a defined feature:
 an agent can remove the behavior and its tests while leaving the remaining
@@ -35,7 +38,8 @@ your-project/
 This root-level file can explain what is being built, distinguish relevant
 surfaces, and map them to feature names. It stays compatible with `README.md`
 as the human-facing overview and `AGENTS.md` as repository-wide working
-guidance.
+guidance. Its project-specific context is descriptive; essential behavior
+belongs in normative requirements under `feature-spec/`.
 
 For example, a fictional community tool library with a self-service kiosk and
 a staff desk could explain that:
@@ -47,6 +51,24 @@ Staff.*    describes staff-only tools and workflows.
 ```
 
 Read the full [Keystone agent guidance](KEYSTONE.md).
+
+## Put shared requirements at the namespace root
+
+A top-level specification holds requirements shared by every descendant in its
+namespace. A single-product project can use a product-named root such as
+`CoveMail.md` for product-wide guarantees inherited by `CoveMail.Accounts` and
+`CoveMail.Search`. `KEYSTONE.md` describes the product and maps those
+namespaces; `CoveMail.md` defines the behavior they must preserve.
+
+Not every repository needs one project-wide root. A monorepo can use separate
+top-level namespaces such as `Desktop`, `Server`, and `Shared` when those are
+the natural requirement boundaries.
+
+When an agent adds behavior that is not covered by an existing specification,
+it should ask whether the new feature belongs in Keystone's scope. If it does,
+the agent proposes and gets confirmation for the smallest suitable
+specification before writing it. If it does not, the behavior can remain
+undocumented by design.
 
 ## Describe the features that must stay
 
@@ -94,10 +116,10 @@ The validator uses only the Python standard library.
 
 ## Current status
 
-Keystone is an early framework proposal. Its filename, inheritance, and
-exception rules are usable now. The validator checks document names, headings,
-removed sections, parent declarations, related references, and exception
-sources.
+Keystone `0.1.0` is an early framework release. Its filename, inheritance, and
+exception rules are usable now, but the contract is not final. The validator
+checks document names, headings, removed sections, parent declarations, related
+references, and exception sources.
 
 ## License
 
