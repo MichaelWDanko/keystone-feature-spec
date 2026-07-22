@@ -42,18 +42,17 @@ requirements in an applicable file under `feature-spec/`, not only as prose in
 `KEYSTONE.md`. This keeps project and namespace navigation separate from the
 requirements inherited by implementations and tests.
 
-For example, a fictional community tool library with a self-service kiosk and
-a staff desk could describe three namespace boundaries before defining
-individual features:
+For example, a fictional dog-walking app called Leash could describe three
+namespace boundaries before defining individual features:
 
 ```text
-Lending.*  rules shared by all borrowing workflows
-Kiosk.*    behavior specific to the member-facing kiosk
-Staff.*    behavior specific to staff tools and workflows
+Leash.Settings.*  shared app settings and safety controls
+Leash.Owners.*    behavior specific to dog owners
+Leash.Walkers.*   behavior specific to dog walkers
 ```
 
-This context keeps shared lending rules separate from requirements that apply
-only to members or staff.
+This context keeps shared app rules separate from requirements that apply only
+to dog owners or dog walkers.
 
 ## 2. Repository layout
 
@@ -62,11 +61,9 @@ Markdown file directly inside that directory defines one specification.
 
 ```text
 feature-spec/
-  Lending.md
-  Lending.Loans.md
-  Lending.Loans.Returns.md
-  Catalog.md
-  Catalog.Availability.md
+  Leash.Settings.md
+  Leash.Owners.md
+  Leash.Walkers.md
 ```
 
 Specifications MUST use a flat directory. Dots in the filename express the
@@ -77,7 +74,7 @@ namespace. Directories MUST NOT encode specification inheritance.
 The canonical name is the filename without the `.md` extension.
 
 ```text
-Lending.Loans.md -> Lending.Loans
+Leash.Walkers.md -> Leash.Walkers
 ```
 
 Each namespace segment MUST contain only ASCII letters, digits, or hyphens and
@@ -87,7 +84,7 @@ A specification's first heading MUST be an H1 whose text exactly matches its
 canonical name:
 
 ```markdown
-# Lending.Loans
+# Leash.Walkers
 ```
 
 Canonical names replace arbitrary feature identifiers. Requirements, tests,
@@ -98,11 +95,11 @@ change descriptions, and related specifications SHOULD reference these names.
 A specification inherits every normative requirement from each existing parent
 prefix, ordered from least specific to most specific.
 
-The effective specification for `Lending.Loans.Returns` is:
+The effective specification for `Leash.Walkers.Availability` is:
 
-1. `Lending.md`, when present;
-2. `Lending.Loans.md`, when present; and
-3. `Lending.Loans.Returns.md`.
+1. `Leash.md`, when present; and
+2. `Leash.Walkers.md`, when present; and
+3. `Leash.Walkers.Availability.md`.
 
 Intermediate parents MAY be absent. Every parent that does exist still applies.
 
@@ -120,15 +117,15 @@ descendant.
 ### Top-level namespace specifications
 
 A top-level specification has a canonical name with one segment, such as
-`Lending`. Its normative requirements apply to every descendant in that
+`Leash`. Its normative requirements apply to every descendant in that
 namespace. It SHOULD contain only essential behavior shared across that whole
 namespace.
 
 A project with one clear product boundary MAY use a product-named top-level
-specification for project-wide requirements. For example, `CoveMail.md` can
-hold requirements inherited by `CoveMail.Accounts` and `CoveMail.Search`.
-`KEYSTONE.md` would still describe Cove Mail, its runtime surfaces, and what
-those namespaces represent.
+specification for project-wide requirements. For example, `Leash.md` can hold
+requirements inherited by `Leash.Owners` and `Leash.Walkers`. `KEYSTONE.md`
+would still describe Leash, its runtime surfaces, and what those namespaces
+represent.
 
 A project is not required to have one project-wide root specification. A
 monorepo or system with independent boundaries MAY use several top-level
@@ -141,29 +138,28 @@ common parent only to make every specification descend from one file.
 A specification SHOULD use the following sections when applicable:
 
 ```markdown
-# Lending.Loans
+# Leash.Walkers.Availability
 
 One-paragraph purpose and scope.
 
 ## Requirements
 
-- Every active loan MUST identify the borrowed item and its due date.
+- Every walker profile MUST identify the walker and their service area.
 
 ## Exceptions
 
-### Reserved items cannot be renewed
+### Unavailable walkers cannot receive new assignments
 
-Source: `Lending`
+Source: `Leash.Walkers`
 
-Exception: An active loan cannot be renewed when another member has reserved
-the item.
+Exception: An unavailable walker cannot be assigned a new walk.
 
-Rationale: The reservation gives the next member a fair chance to borrow the
-item.
+Rationale: The app must not promise an owner a walk that the walker cannot
+accept.
 
 ## Related specifications
 
-- `Catalog.Availability`
+- `Leash.Settings`
 ```
 
 Only requirements expressed with normative terms are inherited. Purpose text,
@@ -216,11 +212,11 @@ Tests SHOULD reference the most specific applicable canonical name using a
 language-appropriate comment or annotation:
 
 ```swift
-// Feature-Spec: Lending.Loans.Returns
+// Feature-Spec: Leash.Walkers.Availability
 ```
 
 ```python
-# Feature-Spec: Lending.Loans.Returns
+# Feature-Spec: Leash.Walkers.Availability
 ```
 
 Repositories MAY require every specification to have referenced test coverage.

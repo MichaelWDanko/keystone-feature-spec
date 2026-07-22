@@ -72,40 +72,38 @@
           </ul>
           <p>The files MAY summarize the same facts, but they MUST NOT contradict one another. <code>KEYSTONE.md</code> SHOULD contain enough context to choose a namespace without requiring an agent to reverse-engineer system boundaries from source files. It MAY link to another document for deeper operational or architectural detail.</p>
           <p>Project-specific feature context in <code>KEYSTONE.md</code> is descriptive. Essential behavior that a project intends to preserve MUST be expressed as normative requirements in an applicable file under <code>feature-spec/</code>, not only as prose in <code>KEYSTONE.md</code>. This keeps project and namespace navigation separate from the requirements inherited by implementations and tests.</p>
-          <p>For example, a fictional community tool library with a self-service kiosk and a staff desk could describe three namespace boundaries before defining individual features:</p>
-          <pre><code>Lending.*  rules shared by all borrowing workflows
-Kiosk.*    behavior specific to the member-facing kiosk
-Staff.*    behavior specific to staff tools and workflows</code></pre>
-          <p>This context keeps shared lending rules separate from requirements that apply only to members or staff.</p>
+          <p>For example, a fictional dog-walking app called Leash could describe three namespace boundaries before defining individual features:</p>
+          <pre><code>Leash.Settings.*  shared app settings and safety controls
+Leash.Owners.*    behavior specific to dog owners
+Leash.Walkers.*   behavior specific to dog walkers</code></pre>
+          <p>This context keeps shared app rules separate from requirements that apply only to dog owners or dog walkers.</p>
           </section>
           <section id="2-repository-layout">
           <h2>2. Repository layout</h2>
           <p>A project adopts Feature Spec by creating a <code>feature-spec/</code> directory. Every Markdown file directly inside that directory defines one specification.</p>
           <pre><code>feature-spec/
-  Lending.md
-  Lending.Loans.md
-  Lending.Loans.Returns.md
-  Catalog.md
-  Catalog.Availability.md</code></pre>
+  Leash.Settings.md
+  Leash.Owners.md
+  Leash.Walkers.md</code></pre>
           <p>Specifications MUST use a flat directory. Dots in the filename express the namespace. Directories MUST NOT encode specification inheritance.</p>
           </section>
           <section id="3-canonical-names">
           <h2>3. Canonical names</h2>
           <p>The canonical name is the filename without the <code>.md</code> extension.</p>
-          <pre><code>Lending.Loans.md -&gt; Lending.Loans</code></pre>
+          <pre><code>Leash.Walkers.md -&gt; Leash.Walkers</code></pre>
           <p>Each namespace segment MUST contain only ASCII letters, digits, or hyphens and MUST begin with an ASCII letter. Names are case-sensitive.</p>
           <p>A specification&#x27;s first heading MUST be an H1 whose text exactly matches its canonical name:</p>
-          <pre><code># Lending.Loans</code></pre>
+          <pre><code># Leash.Walkers</code></pre>
           <p>Canonical names replace arbitrary feature identifiers. Requirements, tests, change descriptions, and related specifications SHOULD reference these names.</p>
           </section>
           <section id="4-parent-inheritance">
           <h2>4. Parent inheritance</h2>
           <p>A specification inherits every normative requirement from each existing parent prefix, ordered from least specific to most specific.</p>
-          <p>The effective specification for <code>Lending.Loans.Returns</code> is:</p>
+          <p>The effective specification for <code>Leash.Walkers.Availability</code> is:</p>
           <ol>
-            <li><code>Lending.md</code>, when present;</li>
-            <li><code>Lending.Loans.md</code>, when present; and</li>
-            <li><code>Lending.Loans.Returns.md</code>.</li>
+            <li><code>Leash.md</code>, when present; and</li>
+            <li><code>Leash.Walkers.md</code>, when present; and</li>
+            <li><code>Leash.Walkers.Availability.md</code>.</li>
           </ol>
           <p>Intermediate parents MAY be absent. Every parent that does exist still applies.</p>
           <p>A child:</p>
@@ -117,36 +115,35 @@ Staff.*    behavior specific to staff tools and workflows</code></pre>
           </ul>
           <p>Updating a parent immediately updates the effective requirements of every descendant.</p>
           <h3>Top-level namespace specifications</h3>
-          <p>A top-level specification has a canonical name with one segment, such as <code>Lending</code>. Its normative requirements apply to every descendant in that namespace. It SHOULD contain only essential behavior shared across that whole namespace.</p>
-          <p>A project with one clear product boundary MAY use a product-named top-level specification for project-wide requirements. For example, <code>CoveMail.md</code> can hold requirements inherited by <code>CoveMail.Accounts</code> and <code>CoveMail.Search</code>. <code>KEYSTONE.md</code> would still describe Cove Mail, its runtime surfaces, and what those namespaces represent.</p>
+          <p>A top-level specification has a canonical name with one segment, such as <code>Leash</code>. Its normative requirements apply to every descendant in that namespace. It SHOULD contain only essential behavior shared across that whole namespace.</p>
+          <p>A project with one clear product boundary MAY use a product-named top-level specification for project-wide requirements. For example, <code>Leash.md</code> can hold requirements inherited by <code>Leash.Owners</code> and <code>Leash.Walkers</code>. <code>KEYSTONE.md</code> would still describe Leash, its runtime surfaces, and what those namespaces represent.</p>
           <p>A project is not required to have one project-wide root specification. A monorepo or system with independent boundaries MAY use several top-level namespaces, such as <code>Desktop</code>, <code>Server</code>, and <code>Shared</code>. Choose the smallest natural roots that match the behavior being preserved; do not add an artificial common parent only to make every specification descend from one file.</p>
           </section>
           <section id="5-document-structure">
           <h2>5. Document structure</h2>
           <p>A specification SHOULD use the following sections when applicable:</p>
-          <pre><code># Lending.Loans
+          <pre><code># Leash.Walkers.Availability
 
 One-paragraph purpose and scope.
 
 ## Requirements
 
-- Every active loan MUST identify the borrowed item and its due date.
+- Every walker profile MUST identify the walker and their service area.
 
 ## Exceptions
 
-### Reserved items cannot be renewed
+### Unavailable walkers cannot receive new assignments
 
-Source: `Lending`
+Source: `Leash.Walkers`
 
-Exception: An active loan cannot be renewed when another member has reserved
-the item.
+Exception: An unavailable walker cannot be assigned a new walk.
 
-Rationale: The reservation gives the next member a fair chance to borrow the
-item.
+Rationale: The app must not promise an owner a walk that the walker cannot
+accept.
 
 ## Related specifications
 
-- `Catalog.Availability`</code></pre>
+- `Leash.Settings`</code></pre>
           <p>Only requirements expressed with normative terms are inherited. Purpose text, examples, and rationale remain local unless another document explicitly references them.</p>
           </section>
           <section id="6-requirements">
@@ -176,8 +173,8 @@ item.
           <section id="9-tests-and-implementation">
           <h2>9. Tests and implementation</h2>
           <p>Tests SHOULD reference the most specific applicable canonical name using a language-appropriate comment or annotation:</p>
-          <pre><code>// Feature-Spec: Lending.Loans.Returns</code></pre>
-          <pre><code># Feature-Spec: Lending.Loans.Returns</code></pre>
+          <pre><code>// Feature-Spec: Leash.Walkers.Availability</code></pre>
+          <pre><code># Feature-Spec: Leash.Walkers.Availability</code></pre>
           <p>Repositories MAY require every specification to have referenced test coverage. A test can reference more than one specification when it provides meaningful evidence for each.</p>
           <p>Source paths and test filenames SHOULD NOT be maintained in the specification as the primary mapping because they change more often than feature intent.</p>
           </section>

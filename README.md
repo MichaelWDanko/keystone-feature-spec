@@ -28,9 +28,9 @@ your-project/
 ├── KEYSTONE.md
 ├── AGENTS.md  (existing or approved)
 └── feature-spec/
-    ├── Lending.md
-    ├── Lending.Loans.md
-    └── Catalog.md
+    ├── Leash.Settings.md
+    ├── Leash.Owners.md
+    └── Leash.Walkers.md
 ```
 
 ## `KEYSTONE.md` explains the project and guides agents
@@ -41,13 +41,12 @@ as the human-facing overview and `AGENTS.md` as repository-wide working
 guidance. Its project-specific context is descriptive; essential behavior
 belongs in normative requirements under `feature-spec/`.
 
-For example, a fictional community tool library with a self-service kiosk and
-a staff desk could explain that:
+For example, a fictional dog-walking app called Leash could explain that:
 
 ```text
-Lending.*  describes rules shared by all borrowing workflows.
-Kiosk.*    describes the member-facing kiosk experience.
-Staff.*    describes staff-only tools and workflows.
+Leash.Settings.*  describes shared app settings and safety rules.
+Leash.Owners.*    describes the dog-owner experience.
+Leash.Walkers.*   describes the dog-walker experience.
 ```
 
 Read the full [Keystone agent guidance](KEYSTONE.md).
@@ -56,9 +55,9 @@ Read the full [Keystone agent guidance](KEYSTONE.md).
 
 A top-level specification holds requirements shared by every descendant in its
 namespace. A single-product project can use a product-named root such as
-`CoveMail.md` for product-wide guarantees inherited by `CoveMail.Accounts` and
-`CoveMail.Search`. `KEYSTONE.md` describes the product and maps those
-namespaces; `CoveMail.md` defines the behavior they must preserve.
+`Leash.md` for product-wide guarantees inherited by `Leash.Owners` and
+`Leash.Walkers`. `KEYSTONE.md` describes the product and maps those
+namespaces; `Leash.md` defines the behavior they must preserve.
 
 Not every repository needs one project-wide root. A monorepo can use separate
 top-level namespaces such as `Desktop`, `Server`, and `Shared` when those are
@@ -77,22 +76,22 @@ create a Markdown file named after the feature. Describe what it must do, not
 how the code is built.
 
 ```markdown
-# Lending.Loans
+# Leash.Walkers
 
 ## Requirements
 
-- Every active loan MUST identify the borrowed item and its due date.
-- An unavailable item MUST NOT be checked out to another member.
-- Renewing one loan MUST NOT change another loan.
+- Every walker profile MUST identify the walker and their service area.
+- An unavailable walker MUST NOT be assigned a new walk.
+- Updating one walker profile MUST NOT change another walker profile.
 ```
 
 Need to describe something more specific? Add another part to the filename,
-separated by a dot. `Lending.Loans.Returns.md` includes the requirements from
-`Lending.md` and `Lending.Loans.md` because its name starts with those names.
-The new file only needs the added requirements for returning an item.
+separated by a dot. `Leash.Walkers.Availability.md` includes the requirements
+from `Leash.Walkers.md` because its name starts with that name. The new file
+only needs the added requirements for showing walker availability.
 
 Read the [full specification](SPEC.md) or the
-[worked example](examples/feature-spec/Lending.Loans.md).
+[worked example](examples/feature-spec/Leash.Walkers.md).
 
 ## Repository map
 

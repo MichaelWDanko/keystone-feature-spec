@@ -51,16 +51,16 @@
 
           <figure class="spec-example">
             <figcaption>
-              <span>feature-spec/Lending.Loans.md</span>
+              <span>feature-spec/Leash.Walkers.md</span>
               <span>plain Markdown</span>
             </figcaption>
-            <pre><code><span class="token-heading"># Lending.Loans</span>
+            <pre><code><span class="token-heading"># Leash.Walkers</span>
 
 <span class="token-heading">## Requirements</span>
-- Every active loan <strong>MUST</strong> identify the borrowed item
-  and its due date.
-- An unavailable item <strong>MUST NOT</strong> be checked out.
-- Renewing one loan <strong>MUST NOT</strong> change another.</code></pre>
+- Every walker profile <strong>MUST</strong> identify the walker
+  and their service area.
+- An unavailable walker <strong>MUST NOT</strong> be assigned a new walk.
+- Updating one walker profile <strong>MUST NOT</strong> change another.</code></pre>
           </figure>
         </div>
       </section>
@@ -95,9 +95,9 @@
 ├── KEYSTONE.md
 ├── AGENTS.md  (existing or approved)
 └── feature-spec/
-    ├── Lending.md
-    ├── Lending.Loans.md
-    └── Catalog.md</code></pre>
+    ├── Leash.Settings.md
+    ├── Leash.Owners.md
+    └── Leash.Walkers.md</code></pre>
           </article>
         </div>
         <p class="copy-status" role="status" aria-live="polite"></p>
@@ -132,14 +132,13 @@ in `feature-spec/` as behavior the project intends to preserve.
 
 ## Feature context
 
-This example project runs a community tool library with a
-self-service kiosk and a staff desk. Members use the kiosk to
-borrow available tools. Staff use a separate workspace to manage
-the catalog and resolve lending issues.
+This example project runs Leash, a dog-walking app. Dog owners
+use the app to manage dogs and request walks. Dog walkers use a
+separate workspace to manage availability and assigned walks.
 
-- `Lending.*` describes rules shared by borrowing workflows.
-- `Kiosk.*` describes the member-facing kiosk experience.
-- `Staff.*` describes staff-only tools and workflows.
+- `Leash.Settings.*` describes shared app settings and safety controls.
+- `Leash.Owners.*` describes the dog-owner experience.
+- `Leash.Walkers.*` describes the dog-walker experience.
 
 ## Before changing a Keystone feature
 
@@ -174,27 +173,25 @@ only that chain and relevant related specifications.</code></pre>
         <div class="section-detail">
           <div class="detail-copy">
             <p>Keystone does not require you to document every feature. For each feature of your application, create a Markdown file named after it. Describe what it must do, not how the code is built.</p>
-            <p><strong>Put shared requirements at the namespace root.</strong> A single-product project can use a root such as <code>CoveMail.md</code> for product-wide guarantees inherited by <code>CoveMail.Accounts.md</code> and <code>CoveMail.Search.md</code>. A monorepo can instead use separate roots such as <code>Desktop.md</code>, <code>Server.md</code>, and <code>Shared.md</code>.</p>
-            <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Lending.Loans.Returns.md</code> includes the requirements from <code>Lending.md</code> and <code>Lending.Loans.md</code> because its name starts with those names. The new file only needs the added requirements for returning an item.</p>
+            <p><strong>Put shared requirements at the namespace root.</strong> A single-product project can use a root such as <code>Leash.md</code> for product-wide guarantees inherited by <code>Leash.Owners.md</code> and <code>Leash.Walkers.md</code>. A monorepo can instead use separate roots such as <code>Desktop.md</code>, <code>Server.md</code>, and <code>Shared.md</code>.</p>
+            <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Leash.Walkers.Availability.md</code> includes the requirements from <code>Leash.Walkers.md</code> because its name starts with that name. The new file only needs the added requirements for showing walker availability.</p>
           </div>
           <div class="spec-sample">
-            <div class="sample-toolbar"><span>feature-spec/Lending.Loans.md</span><span>essential feature requirements</span></div>
-            <pre><code># Lending.Loans
+            <div class="sample-toolbar"><span>feature-spec/Leash.Walkers.md</span><span>essential feature requirements</span></div>
+            <pre><code># Leash.Walkers
 
-Defines requirements for borrowing and managing tool loans.
+Defines requirements for dog walkers who use the fictional Leash dog-walking app.
 
 ## Requirements
 
-- Every active loan MUST identify the item, member, and due date.
-- An unavailable item MUST NOT be checked out to another member.
-- Users MUST be told why a checkout cannot be completed.
-- Renewing one loan MUST NOT change another loan.
-- Loan status MUST NOT rely on color alone.
-- Returning an item MUST make it available for future loans.
+- A walker profile MUST identify the walker and their service area.
+- An unavailable walker MUST NOT be assigned a new walk.
+- Walker views MUST identify the dog, owner, location, and care instructions.
+- Updating one walker profile MUST NOT change another walker profile.
 
 ## Related specifications
 
-- `Catalog.Availability`</code></pre>
+- `Leash.Settings`</code></pre>
           </div>
         </div>
       </section>
