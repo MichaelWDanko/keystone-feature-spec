@@ -11,8 +11,10 @@ class VersionTests(unittest.TestCase):
         self.assertRegex(version, r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 
         surfaces = (
+            "CHANGELOG.md",
             "README.md",
             "SPEC.md",
+            "VERSIONING.md",
             "agent-prompt.md",
             "site/index.html",
             "site/specification.template.html",

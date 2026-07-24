@@ -1,18 +1,17 @@
 # Contributing
 
-Feature Spec is being developed as a portable feature-requirements framework.
+Keystone is being developed as a portable product-definition framework.
 Contributions should improve the format without making maintainers author the
 same feature intent in multiple representations.
 
 ## Principles
 
 - Markdown is the authored source of truth.
-- Canonical names come from filenames; contributors do not invent IDs.
+- Feature names come from filenames; contributors do not invent IDs.
 - Parent inheritance is structural and deterministic.
-- Requirements describe selected essential behavior that is currently
-  implemented, supported, and intended to remain, not implementation details.
-- Planned, deferred, and retired behavior stays outside the active
-  specification.
+- Active requirements describe implemented, supported behavior.
+- `TODO.*.md` documents define intended behavior that has not been implemented.
+- TODO documents define product behavior without becoming a backlog.
 - Generated indexes and reports must never become additional authored sources.
 - Tooling should remain language- and domain-neutral.
 
@@ -36,7 +35,7 @@ When changing the framework:
 2. Add or revise a minimal example demonstrating the behavior.
 3. Update validation when the rule can be checked deterministically.
 4. Add tests for validator behavior.
-5. Update the roadmap if the change alters planned work.
+5. Update `CHANGELOG.md` when the change affects the published contract.
 
 ## Proposals
 

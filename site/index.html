@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Keystone is a Markdown-native feature contract that helps people and coding agents preserve essential behavior.">
+    <meta name="description" content="Keystone defines the intended shape of a product in plain Markdown for people and coding agents.">
     <meta name="theme-color" content="#fffefa">
-    <title>Keystone — A feature contract in plain Markdown</title>
+    <title>Keystone — Define your product beside the code</title>
     <link rel="stylesheet" href="styles.css?rev=20260720-17">
   </head>
   <body>
@@ -15,7 +15,7 @@
       <a class="wordmark" href="#top" aria-label="Keystone home">
         <span class="wordmark-mark" aria-hidden="true">K</span>
         <span>Keystone</span>
-        <em>v0.1.0 draft</em>
+        <em>v0.2.0 draft</em>
       </a>
       <nav aria-label="Primary navigation">
         <a href="#why">Why</a>
@@ -28,11 +28,11 @@
     <main id="main">
       <section class="hero" id="top">
         <header class="hero-heading">
-          <h1>Keep essential feature requirements beside the code.</h1>
+          <h1>Define your product beside the code.</h1>
         </header>
         <div class="hero-detail">
           <div class="hero-copy" id="why">
-            <p class="hero-lede">Keystone captures the behavior a project intends to preserve. It does not need to describe everything. Tests alone cannot protect a defined feature: an agent can remove the behavior and its tests while leaving the remaining test suite green. Keystone keeps selected requirements outside the implementation so people and coding agents can review what must remain before changing code.</p>
+            <p class="hero-lede">Keystone turns product intent into structured Markdown that people and coding agents can follow. Define an entire product or only the features that need a durable contract. Distinguish what exists from what remains to be built, then keep the implementation aligned as the product changes.</p>
             <div class="comparison hero-comparison" aria-label="Comparison of tests and Keystone">
               <div>
                 <span class="comparison-label">Tests answer</span>
@@ -40,7 +40,7 @@
               </div>
               <div>
                 <span class="comparison-label">Keystone answers</span>
-                <strong>Does an agent's changes preserve the intended features?</strong>
+                <strong>Is this the product we intended to build?</strong>
               </div>
             </div>
             <div class="hero-actions">
@@ -51,16 +51,16 @@
 
           <figure class="spec-example">
             <figcaption>
-              <span>feature-spec/Leash.Walkers.md</span>
+              <span>feature-spec/TODO.Leash.Walkers.Scheduling.md</span>
               <span>plain Markdown</span>
             </figcaption>
-            <pre><code><span class="token-heading"># Leash.Walkers</span>
+            <pre><code><span class="token-heading"># Leash.Walkers.Scheduling</span>
 
 <span class="token-heading">## Requirements</span>
-- Every walker profile <strong>MUST</strong> identify the walker
-  and their service area.
-- An unavailable walker <strong>MUST NOT</strong> be assigned a new walk.
-- Updating one walker profile <strong>MUST NOT</strong> change another.</code></pre>
+- A walker <strong>MUST</strong> be able to define recurring available hours.
+- An owner <strong>MUST NOT</strong> be offered a walk outside
+  a walker's available hours.
+- Changing availability <strong>MUST NOT</strong> alter a confirmed walk.</code></pre>
           </figure>
         </div>
       </section>
@@ -68,7 +68,7 @@
       <section class="onboarding-section section" id="start">
         <div class="onboarding-intro">
           <h2>Getting started</h2>
-          <p>Give <a href="https://github.com/MichaelWDanko/keystone-feature-spec/blob/main/agent-prompt.md"><strong>agent-prompt.md</strong></a> to a coding agent. It drafts the feature context, adds <code>KEYSTONE.md</code>, updates existing agent guidance, asks before creating <code>AGENTS.md</code>, and proposes an initial set of feature specifications for approval.</p>
+          <p>Give <a href="https://github.com/MichaelWDanko/keystone-feature-spec/blob/main/agent-prompt.md"><strong>agent-prompt.md</strong></a> to a coding agent. It drafts the product context, adds <code>KEYSTONE.md</code>, updates existing agent guidance, and proposes active specifications plus TODO documents for approval.</p>
         </div>
 
         <div class="onboarding-grid">
@@ -97,7 +97,8 @@
 └── feature-spec/
     ├── Leash.Settings.md
     ├── Leash.Owners.md
-    └── Leash.Walkers.md</code></pre>
+    ├── Leash.Walkers.md
+    └── TODO.Leash.Walkers.Scheduling.md</code></pre>
           </article>
         </div>
         <p class="copy-status" role="status" aria-live="polite"></p>
@@ -109,7 +110,7 @@
         </header>
         <div class="section-detail">
           <div class="detail-copy">
-            <p>This root-level file explains what is being built, distinguishes relevant surfaces, and maps them to feature namespaces. Its project-specific context is descriptive. Essential behavior belongs in normative requirements under <code>feature-spec/</code>.</p>
+            <p>This root-level file explains what is being built, distinguishes relevant surfaces, and maps them to feature namespaces. Product behavior belongs in active specifications and TODO documents under <code>feature-spec/</code>.</p>
             <p><code>README.md</code> remains the human-facing overview, while <code>AGENTS.md</code> contains repository-wide working guidance.</p>
             <div class="comparison" aria-label="Comparison of Keystone project context and top-level specifications">
               <div>
@@ -126,9 +127,9 @@
             <div class="sample-toolbar"><span>KEYSTONE.md</span><span>standard agent instructions</span></div>
             <pre><code># Keystone agent guidance
 
-This project uses Keystone to keep essential feature requirements
-separate from their implementation. Treat the Markdown documents
-in `feature-spec/` as behavior the project intends to preserve.
+This project uses Keystone to define intended product behavior
+beside the code. Unprefixed files are active specifications.
+Files prefixed with `TODO.` define unimplemented behavior.
 
 ## Feature context
 
@@ -140,58 +141,56 @@ separate workspace to manage availability and assigned walks.
 - `Leash.Owners.*` describes the dog-owner experience.
 - `Leash.Walkers.*` describes the dog-walker experience.
 
-## Before changing a Keystone feature
+## Before changing implemented behavior
 
 Before changing a documented feature, an agent MUST:
 
-1. identify the most specific affected specification;
-2. read its namespace parents from least to most specific;
-3. read the target and its related specifications;
+1. ignore unrelated TODO documents;
+2. identify the most specific affected active specification;
+3. read its active parents and related specifications;
 4. identify inherited requirements and exceptions;
 5. make implementation and tests conform; and
 6. report conflicts instead of weakening a requirement.
 
-When an agent adds behavior that is not covered by an existing specification,
-it asks whether the feature belongs in Keystone's scope. If yes, it proposes
-the smallest suitable namespace and requirements for confirmation before
-writing the specification. If no, the behavior remains outside the documented
-collection by design.
+For future work, read matching TODO documents and their active
+context. After implementation, reconcile the TODO document with
+the active specification and remove the `TODO.` prefix.
 
 ## Navigate `feature-spec/` efficiently
 
 Do not load every file in `feature-spec/`. Start with filenames,
-derive the parent chain from the dot-separated name, and open
-only that chain and relevant related specifications.</code></pre>
+derive the parent chain from the target feature name, and open
+only the active or TODO context relevant to the task.</code></pre>
           </div>
         </div>
       </section>
 
       <section class="guide-section example-section section" id="feature-example">
         <header class="section-heading">
-          <h2>Describe the features that must stay.</h2>
+          <h2>Define what exists and what comes next.</h2>
         </header>
         <div class="section-detail">
           <div class="detail-copy">
-            <p>Keystone does not require you to document every feature. For each feature of your application, create a Markdown file named after it. Describe what it must do, not how the code is built.</p>
+            <p>Keystone can define a whole product or only selected features. Use an unprefixed file for implemented behavior and a <code>TODO.</code> prefix for behavior that has not been built. Describe what each feature must do, not how its code is built.</p>
+            <p><strong>TODO documents are not backlog items.</strong> They define intended product behavior without assigning, prioritizing, scheduling, or authorizing work. Once the behavior is implemented, reconcile the document with any matching active specification and remove the prefix.</p>
             <p><strong>Put shared requirements at the namespace root.</strong> A single-product project can use a root such as <code>Leash.md</code> for product-wide guarantees inherited by <code>Leash.Owners.md</code> and <code>Leash.Walkers.md</code>. A monorepo can instead use separate roots such as <code>Desktop.md</code>, <code>Server.md</code>, and <code>Shared.md</code>.</p>
             <p class="namespace-note-inline"><strong>Need to describe something more specific?</strong> Add another part to the filename, separated by a dot. For example, <code>Leash.Walkers.Availability.md</code> includes the requirements from <code>Leash.Walkers.md</code> because its name starts with that name. The new file only needs the added requirements for showing walker availability.</p>
           </div>
           <div class="spec-sample">
-            <div class="sample-toolbar"><span>feature-spec/Leash.Walkers.md</span><span>essential feature requirements</span></div>
-            <pre><code># Leash.Walkers
+            <div class="sample-toolbar"><span>feature-spec/TODO.Leash.Walkers.Scheduling.md</span><span>unimplemented product definition</span></div>
+            <pre><code># Leash.Walkers.Scheduling
 
-Defines requirements for dog walkers who use the fictional Leash dog-walking app.
+Defines intended scheduling behavior that has not been implemented.
 
 ## Requirements
 
-- A walker profile MUST identify the walker and their service area.
-- An unavailable walker MUST NOT be assigned a new walk.
-- Walker views MUST identify the dog, owner, location, and care instructions.
-- Updating one walker profile MUST NOT change another walker profile.
+- A walker MUST be able to define recurring available hours.
+- An owner MUST NOT be offered a walk outside available hours.
+- Changing availability MUST NOT alter a confirmed walk.
 
 ## Related specifications
 
-- `Leash.Settings`</code></pre>
+- `Leash.Walkers`</code></pre>
           </div>
         </div>
       </section>

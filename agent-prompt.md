@@ -5,262 +5,231 @@ other file or URL.
 
 ## Provisioning steps
 
-1. Read any existing root `README.md`, `AGENTS.md`, `CLAUDE.md`, and durable
-   architecture or project overview documents. Inspect top-level source and
-   executable boundaries when the documents do not make the relevant surfaces
-   clear.
-2. Draft the `Feature context` section described below. It must identify what
-   is being built, its distinct surfaces or runtimes, shared behavior,
-   and the namespace boundaries those distinctions imply. Keep this context
-   descriptive. Put essential behavior the project intends to preserve in
-   normative requirements under `feature-spec/`, not only in `KEYSTONE.md`. If
-   the repository does not provide enough evidence, or existing documents
-   conflict, ask the user for the missing context instead of guessing.
-3. Use the embedded authoring contract below to identify currently implemented
-   behavior that appears essential and intentionally preserved. Keystone need
-   not cover every feature.
-4. Use the drafted surfaces to propose the smallest useful set of dot-namespaced
-   Markdown files under `feature-spec/`. When project-wide requirements share
-   one natural product boundary, propose a product-named top-level
-   specification such as `Leash.md` so its requirements are inherited by
-   descendants. Do not force one common root when a monorepo or system has
-   independent boundaries. Keep shared behavior in the smallest natural parent
-   namespace and surface-specific behavior in distinct child namespaces. Do
-   not include planned, deferred, deprecated, or retired behavior.
-5. Show the proposed feature context, filenames, and requirements to the user
-   for confirmation before creating `KEYSTONE.md` or writing any files under
-   `feature-spec/`.
-6. After confirmation, create `KEYSTONE.md` in the repository root from the
-   template in the `KEYSTONE.md content` section below, replacing
-   `{{FEATURE_CONTEXT}}` with the confirmed feature context. Do not leave the
-   placeholder in the file.
-7. If a root `AGENTS.md` exists, add this line to it:
+1. Read existing root `README.md`, `AGENTS.md`, `CLAUDE.md`, product
+   requirements, roadmaps, and durable architecture documents. Inspect
+   top-level source and executable boundaries when the documents do not make
+   the product surfaces clear.
+2. Draft the `Feature context` described below. Identify what is being built,
+   its distinct surfaces or runtimes, shared behavior, and the namespace
+   boundaries those distinctions imply. Do not guess when sources conflict.
+3. Identify product behavior that should have a durable Keystone definition.
+   Keystone may define the whole product or only selected features.
+4. Separate that behavior by implementation state:
+   - propose an unprefixed active specification only for behavior that is
+     implemented and supported;
+   - propose a `TODO.*.md` document for defined behavior that has not been
+     implemented.
+5. Use the smallest useful dot-namespaced filenames. Put shared behavior in the
+   smallest natural parent. Do not force one common root when a system has
+   independent product boundaries.
+6. Show the proposed feature context, filenames, implementation-state
+   classification, and requirements to the user for confirmation before
+   creating `KEYSTONE.md` or writing under `feature-spec/`.
+7. After confirmation, create `KEYSTONE.md` from the template below. Replace
+   `{{FEATURE_CONTEXT}}` with confirmed project-specific Markdown.
+8. If root `AGENTS.md` exists, add:
 
    ```text
    This project uses Keystone. Before changing a Keystone feature, read and follow `KEYSTONE.md`.
    ```
 
-   If `AGENTS.md` does not exist, ask the user whether it should be created.
-   Do not create it without explicit confirmation.
-8. If a root `CLAUDE.md` exists, add the same line to it. Do not create
-   `CLAUDE.md` when it is absent.
-9. Write only the confirmed files under `feature-spec/`.
+   If `AGENTS.md` is absent, ask before creating it.
+9. If root `CLAUDE.md` exists, add the same line. Do not create `CLAUDE.md`
+   when absent.
+10. Write only the confirmed active and TODO files under `feature-spec/`.
 
-Do not change existing behavior while provisioning Keystone. Report any
-conflict or uncertainty instead of inventing a requirement.
+Do not change product behavior while provisioning Keystone. Do not treat a
+roadmap item or loose idea as defined product behavior without confirmation.
 
 ## `KEYSTONE.md` content
 
-Use the following template for the new root `KEYSTONE.md`. Replace
-`{{FEATURE_CONTEXT}}` with confirmed project-specific Markdown. Keep the rest
-of the template unchanged:
+Use this template and replace `{{FEATURE_CONTEXT}}`:
 
 ````markdown
 # Keystone agent guidance
 
-This project uses Keystone to keep essential feature requirements separate from
-their implementation. Treat the Markdown documents in `feature-spec/` as the
-durable source of truth for behavior the project intentionally preserves.
-Implementation and tests MUST follow the applicable feature specifications.
-A mismatch between a specification and the implementation is a defect to
-resolve explicitly. Missing code or tests MUST NOT be treated as permission to
-remove a documented requirement.
+This project uses Keystone to define intended product behavior beside the code.
+The Markdown files in `feature-spec/` are the durable source of truth for the
+parts of the product the project chooses to define.
+
+Unprefixed files are active Keystone specifications. They describe implemented,
+supported behavior. Implementation and tests MUST follow their applicable
+requirements. A mismatch is a defect to resolve explicitly.
+
+Files prefixed with `TODO.` define intended behavior that has not been
+implemented. They are not active specifications and do not constrain the
+current product. When work implements a TODO document, its requirements define
+what the completed feature must do.
 
 ## Feature context
 
 {{FEATURE_CONTEXT}}
 
-Project-specific context in this file is descriptive. Essential behavior that
-the project intends to preserve belongs in normative requirements under
-`feature-spec/`. A top-level specification holds requirements shared by its
-namespace descendants; repositories with independent product boundaries may
-use several top-level specifications instead of one artificial common root.
+Product context in this file is descriptive. Normative product behavior belongs
+in active or TODO documents under `feature-spec/`.
 
-## Before changing a Keystone feature
+## Before changing implemented behavior
 
 An agent MUST:
 
-1. list the filenames in `feature-spec/` and identify the most specific
-   specification affected by the work;
-2. read that specification's existing namespace parents from least specific to
-   most specific;
-3. read the target specification and any files named in its
-   `Related specifications` section;
-4. identify the inherited requirements and any declared exceptions;
-5. make the implementation and test coverage conform to the effective
+1. list the filenames in `feature-spec/`;
+2. ignore unrelated `TODO.*.md` files;
+3. identify the most specific active specification affected by the work;
+4. read its active namespace parents from least specific to most specific;
+5. read the target and its active related specifications;
+6. identify inherited requirements and declared exceptions;
+7. make implementation and tests conform to the effective active
    specification; and
-6. report any conflict between the requested work and the specifications
-   instead of silently weakening, bypassing, or removing a requirement.
+8. report conflicts instead of silently weakening or removing a requirement.
 
-## When adding a new feature
+## When working on unimplemented behavior
 
-When a requested change adds a new feature or materially expands behavior that
-is not covered by the applicable specifications, an agent MUST ask the user
-whether the behavior should be in Keystone's scope. The agent SHOULD include a
-short proposal for the smallest suitable namespace, requirements, and related
-specifications so the user can make that decision.
+When a task concerns future behavior, inspect matching `TODO.*.md` files. Before
+implementing a TODO document, read:
 
-If the user confirms that the behavior belongs in Keystone, the agent MUST get
-explicit confirmation of the proposed specification change before creating or
-updating the file, then implement and test against the approved requirements.
-If the user declines, the agent MUST NOT create a specification for that
-behavior and SHOULD note that it remains outside Keystone's documented scope.
+1. its applicable active parent chain;
+2. an active specification with the same feature name, when present;
+3. applicable TODO parents from least specific to most specific;
+4. the target TODO document; and
+5. its related documents.
 
-Keystone is not required to describe every implemented feature. A feature with
-no applicable specification is not governed by Keystone merely because it
-exists. When the user chooses behavior as essential and intended to remain, add
-or update the smallest suitable specification after explicit confirmation.
+Reconcile conflicts between current active behavior and intended TODO behavior
+explicitly. Once the behavior is implemented and verified, reconcile the TODO
+document with any active specification that has the same feature name, then
+remove the `TODO.` prefix.
 
-Change an existing feature specification only when the user explicitly
-requests or confirms the change. A request to change implementation alone does
-not authorize a specification change. Once behavior is documented, treat it as
-essential until the user confirms otherwise.
+Keystone does not decide what an agent may implement. Follow the user's request
+and repository instructions. Do not implement a TODO document merely because it
+exists unless the task or local guidance calls for that work.
 
-Active specifications describe only essential behavior that is currently
-implemented, supported, and intended to remain. Keep planned work, deferred
-ideas, and retired behavior in the project's planning or history documents.
+When work defines new product behavior, ask whether it belongs in Keystone. If
+it does and is not implemented, propose the smallest suitable TODO document. If
+it is implemented, propose an active specification. Get confirmation before
+writing either.
 
 ## Navigate `feature-spec/` efficiently
 
-Do not load every specification into context. The flat, dot-separated
-filenames form a namespace. For example:
-
-```text
-feature-spec/
-  Leash.Settings.md
-  Leash.Owners.md
-  Leash.Walkers.md
-```
-
-For work on `Leash.Walkers`, inspect only:
-
-1. `Leash.md`, if it exists;
-2. `Leash.Walkers.md`; and
-3. relevant files named in the target's `Related specifications` section.
-
-Start with filenames instead of file contents:
+Start with filenames:
 
 ```sh
 find feature-spec -maxdepth 1 -type f -name '*.md' -print | sort
 ```
 
-Narrow candidates by namespace or feature language before opening files:
-
-```sh
-find feature-spec -maxdepth 1 -type f -name 'Leash*.md' -print | sort
-rg -n -i 'walker availability|dog walker' feature-spec
-```
-
-Derive the parent chain from the selected file's dot-separated name. Open only
-that chain and relevant related specifications. Use targeted searches to find
-cross-cutting requirements; do not concatenate the whole directory as a
-default discovery step.
-
-If no applicable specification exists, follow the repository's other guidance.
-Do not create a specification unless the user asks to preserve that behavior
-through Keystone or confirms a proposal to do so.
+The `TODO.` prefix records implementation state. Remove it before deriving the
+target feature name and parent chain. Open only the applicable active chain,
+matching TODO chain when relevant, and related documents. Use targeted searches
+instead of loading the whole directory by default.
 ````
 
 ## Embedded authoring contract
 
-Apply all of these rules when proposing and writing files under
-`feature-spec/`:
+Apply these rules when proposing and writing files under `feature-spec/`:
 
 ````markdown
 # Keystone feature specification authoring contract
 
-Version 0.1.0 (draft)
+Version 0.2.0 (draft)
 
 The key words `MUST`, `MUST NOT`, `REQUIRED`, `SHOULD`, `SHOULD NOT`, and `MAY`
 are normative.
 
-A `feature-spec/` collection is the set of Markdown specification files in a
-project's `feature-spec/` directory. It describes selected essential behavior
-that is currently implemented, supported, and intended to remain. It need not
-describe every feature in the project. Planned work, deferred ideas, and
-retired behavior belong in roadmaps, issue trackers, or project history rather
-than the active specifications.
+Keystone defines the intended shape of a product. A project can define an
+entire product or only selected features. Anything not documented remains
+outside Keystone by design.
+
+An unprefixed Markdown file is an active specification for implemented,
+supported behavior. A `TODO.*.md` file defines intended behavior that has not
+been implemented and is not yet an active specification. Both live directly
+inside the flat `feature-spec/` directory.
+
+Keystone does not assign, prioritize, or authorize work. A user or repository
+decides what an agent may implement.
 
 ## Feature context
 
-Root `KEYSTONE.md` SHOULD describe what is being built, the distinct surfaces
-or runtimes relevant to its essential features, shared behavior, and the
-namespace boundaries implied by those distinctions. It MAY be self-contained
-for a new project. When `README.md` or `AGENTS.md` exists, use compatible roles:
-`README.md` for the
-human-facing overview and setup, `AGENTS.md` for repository-wide working rules,
-and `KEYSTONE.md` for durable feature context and specification navigation.
+Root `KEYSTONE.md` SHOULD describe what is being built, relevant product
+surfaces or runtimes, shared behavior, and namespace boundaries. It MUST NOT
+contradict `README.md`, `AGENTS.md`, or other durable product documents.
 
-These files MUST NOT contradict one another. `KEYSTONE.md` SHOULD contain
-enough context to choose a namespace without reverse-engineering system
-boundaries from source files. Keep shared behavior in a shared namespace and
-surface-specific behavior in separate namespaces.
+Context in `KEYSTONE.md` is descriptive. Defined product behavior MUST be
+expressed as normative requirements in an applicable active or TODO document.
 
-Project-specific feature context in `KEYSTONE.md` is descriptive. Essential
-behavior that a project intends to preserve MUST be expressed as normative
-requirements in an applicable file under `feature-spec/`, not only as prose in
-`KEYSTONE.md`. This keeps project and namespace navigation separate from the
-requirements inherited by implementations and tests.
+## Repository layout and feature names
 
-## Repository layout
+Documents MUST use a flat directory:
 
-Every Markdown file directly inside `feature-spec/` defines one specification.
-Specifications MUST use a flat directory. Dots in the filename express the
-namespace. Directories MUST NOT encode specification inheritance.
-
-## Canonical names
-
-The canonical name is the filename without the `.md` extension. Each namespace
-segment MUST contain only ASCII letters, digits, or hyphens and MUST begin with
-an ASCII letter. Names are case-sensitive.
-
-A specification's first heading MUST be an H1 whose text exactly matches its
-canonical name:
-
-```markdown
-# Leash.Walkers
+```text
+feature-spec/
+  Leash.Settings.md
+  Leash.Walkers.md
+  TODO.Leash.Walkers.Scheduling.md
 ```
 
-Requirements, tests, change descriptions, and related specifications SHOULD
-reference canonical names instead of arbitrary feature identifiers.
+Dots express feature namespaces. Directories MUST NOT encode inheritance or
+implementation state.
 
-## Parent inheritance
+An active feature name is the filename without `.md`. A TODO feature name also
+removes the leading `TODO.`:
 
-A specification inherits every normative requirement from each existing parent
-prefix, ordered from least specific to most specific. The effective
-specification for `Leash.Walkers.Availability` is:
+```text
+Leash.Walkers.md -> Leash.Walkers
+TODO.Leash.Walkers.Scheduling.md -> Leash.Walkers.Scheduling
+```
 
-1. `Leash.md`, when present; and
-2. `Leash.Walkers.md`, when present; and
-3. `Leash.Walkers.Availability.md`.
+Each feature-name segment MUST contain only ASCII letters, digits, or hyphens
+and MUST begin with an ASCII letter. Names are case-sensitive.
 
-Intermediate parents MAY be absent. Every parent that exists still applies. A
-child MAY add requirements or make an inherited requirement stricter. It MUST
-NOT silently weaken or contradict an inherited requirement and MUST declare a
-justified exception when its behavior cannot satisfy one.
+The first heading MUST exactly match the feature name:
 
-### Top-level namespace specifications
+```markdown
+# Leash.Walkers.Scheduling
+```
 
-A top-level specification has a canonical name with one segment, such as
-`Leash`. Its normative requirements apply to every descendant in that
-namespace. It SHOULD contain only essential behavior shared across that whole
-namespace.
+An active specification and TODO document MAY have the same feature name. The
+active file defines current behavior. The TODO file defines an intended
+replacement or expansion.
 
-A project with one clear product boundary MAY use a product-named top-level
-specification for project-wide requirements. For example, `Leash.md` can hold
-requirements inherited by `Leash.Owners` and `Leash.Walkers`. `KEYSTONE.md`
-would still describe Leash, its runtime surfaces, and what those namespaces
-represent.
+## Active inheritance
 
-A project is not required to have one project-wide root specification. A
-monorepo or system with independent boundaries MAY use several top-level
-namespaces, such as `Desktop`, `Server`, and `Shared`. Choose the smallest
-natural roots that match the behavior being preserved; do not add an artificial
-common parent only to make every specification descend from one file.
+An active specification inherits normative requirements from every existing
+active parent prefix, least specific to most specific. TODO documents never add
+requirements to active specifications.
+
+An active child MAY add or strengthen requirements. It MUST NOT silently weaken
+or contradict inherited requirements. It MUST declare a justified exception
+when it cannot satisfy one.
+
+A top-level active specification applies to all active descendants in its
+namespace. A project MAY have separate top-level roots when those are its
+natural product boundaries.
+
+## TODO documents
+
+A TODO document defines intended behavior that is not implemented. Its
+requirements do not constrain the current product, apply to active descendants,
+or make missing behavior a defect.
+
+TODO documents MUST NOT require backlog metadata such as priority, schedule,
+assignment, estimate, or implementation plan.
+
+Before implementing a TODO document, read:
+
+1. its active parent chain;
+2. an active specification with the same feature name, when present;
+3. applicable TODO parents from least specific to most specific;
+4. the target TODO document; and
+5. related documents.
+
+Reconcile conflicts explicitly. Once behavior is implemented and verified,
+reconcile the TODO document with any matching active specification and remove
+the `TODO.` prefix. Only then does it become active.
+
+Active specifications MUST NOT depend on TODO documents. TODO documents MAY
+reference active or TODO documents.
 
 ## Document structure
 
-A specification SHOULD use these sections when applicable:
+Use these sections when applicable:
 
 ```markdown
 # Leash.Walkers.Availability
@@ -273,12 +242,11 @@ One-paragraph purpose and scope.
 
 ## Exceptions
 
-### Pending-verification walkers cannot receive new assignments
+### Pending walkers cannot receive assignments
 
 Source: `Leash.Walkers`
 
-Exception: A walker whose verification is pending cannot be assigned a new
-walk.
+Exception: A walker whose verification is pending cannot receive a walk.
 
 Rationale: The app must verify a walker before promising an owner a walk.
 
@@ -287,80 +255,62 @@ Rationale: The app must verify a walker before promising an owner a walk.
 - `Leash.Settings`
 ```
 
-Only requirements expressed with normative terms are inherited. Purpose text,
-examples, and rationale remain local unless another document explicitly
-references them.
+Only normative requirements are inherited. Purpose text, examples, and
+rationale remain local.
 
 ## Requirements
 
-Requirements SHOULD describe observable feature behavior and durable
-constraints rather than source files, types, or implementation techniques.
-Every requirement MUST describe behavior that is currently implemented,
-supported, essential, and intended to remain. Requirements MUST NOT describe
-planned, deferred, or retired behavior. The `feature-spec/` collection need not
-be exhaustive; undocumented behavior does not automatically require a
-specification.
+Requirements SHOULD describe observable product behavior and durable
+constraints, not source files, types, or implementation techniques.
 
-A mismatch between the active specification and the implementation is a defect
-to reconcile explicitly. Missing implementation or tests do not authorize
-changing the specification. Use one requirement per list item when practical.
-Requirements SHOULD be specific, observable, and testable. Do not repeat a
-requirement as a separate verification instruction.
+Active requirements MUST describe implemented, supported behavior. A mismatch
+between an active specification and implementation is a defect.
 
-## Exceptions
+TODO requirements define what an implementation MUST satisfy before the
+document can become active. They are normative for that intended implementation
+without constraining the current product.
 
-Each exception MUST:
+Use one requirement per list item when practical. Requirements SHOULD be
+specific, observable, and testable. Do not duplicate requirements as separate
+verification instructions.
 
-1. have its own H3 heading;
-2. name an existing ancestor in a `Source:` field;
-3. state the exception;
-4. explain the rationale; and
-5. remain narrower than the inherited policy it qualifies.
+## Exceptions and related specifications
 
-An exception MUST NOT cite a sibling, descendant, or unrelated specification.
+Each exception MUST have an H3 heading, cite an applicable existing ancestor in
+a `Source:` field, state the exception, explain its rationale, and remain
+narrower than the inherited policy.
 
-## Related specifications
+An active exception MUST cite an active ancestor. A TODO exception MAY cite an
+active or TODO ancestor.
 
-Related specifications identify non-parent feature contracts to inspect before
-changing behavior. Each reference MUST resolve to an existing canonical name.
-Related references do not create inheritance.
+Each related reference MUST resolve to an existing active or TODO document. An
+active specification MUST NOT reference a TODO document. Related references do
+not create inheritance.
 
 ## Tests and implementation
 
-Tests SHOULD reference the most specific applicable canonical name using a
-language-appropriate comment or annotation, such as:
+Tests SHOULD reference the most specific applicable active feature name:
 
 ```swift
 // Feature-Spec: Leash.Walkers.Availability
 ```
 
-Repositories MAY require every specification to have referenced test coverage.
-A test can reference more than one specification when it provides meaningful
-evidence for each. Source paths and test filenames SHOULD NOT be the primary
-mapping because they change more often than feature intent.
+Repositories MAY require active specifications to have referenced test
+coverage. TODO documents do not imply that implementation or tests exist.
 
 ## Agent resolution
 
-Before changing a documented feature, an agent SHOULD identify the most specific
-affected specification; resolve and read all existing namespace parents; read
-the target and related specifications; identify effective inherited
-requirements; preserve or deliberately update test coverage; and record any
-approved requirement change or exception in the specification.
+For current behavior, ignore unrelated TODO documents and resolve the active
+specification chain. For future behavior, inspect matching TODO documents and
+their active and TODO context.
 
-Agents MUST NOT treat missing implementation or missing tests as evidence that
-a documented capability is obsolete.
-
-When a requested change adds a new feature or materially expands behavior that
-is not covered by the applicable specifications, an agent MUST ask the user
-whether the behavior should be in Keystone's scope. If the user confirms that
-it should, the agent MUST propose and receive explicit confirmation of the
-smallest suitable specification change before writing it. If the user declines,
-the behavior remains outside the documented collection.
+Keystone defines product intent and implementation state. It does not grant or
+withhold permission to implement anything. Agents follow the user's request and
+repository instructions.
 
 ## Conformance
 
-A conforming `feature-spec/` collection MUST satisfy the filename, H1,
-namespace, document-section, parent-reference, related-reference, and exception
-rules above. A project MAY adopt stricter conventions without changing the
-meaning of Keystone's base format.
+A conforming collection MUST satisfy these filename, H1, namespace,
+inheritance, section, reference, and exception rules. A project MAY adopt
+stricter conventions without changing the base format.
 ````

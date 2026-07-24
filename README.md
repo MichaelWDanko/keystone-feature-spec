@@ -1,25 +1,29 @@
 # Keystone
 
-**Keep essential feature requirements beside the code.**
+**Define your product beside the code.**
 
-**Current version: 0.1.0 (draft).** Keystone is usable now, but the framework
-contract can still change before `1.0.0`. See [Versioning Keystone](VERSIONING.md).
+**Current version: 0.2.0 (draft).** Keystone is usable now, but the framework
+contract can still change before `1.0.0`. See
+[Versioning Keystone](VERSIONING.md) and the [changelog](CHANGELOG.md).
 
-Keystone records the essential behavior a project intends to preserve. It does
-not need to describe everything. Tests alone cannot protect a defined feature:
-an agent can remove the behavior and its tests while leaving the remaining
-suite green. Keystone keeps selected requirements outside the implementation so
-people and coding agents can review what must remain before changing code.
+Keystone turns product intent into structured Markdown that people and coding
+agents can follow. A project can define an entire product or only the features
+that need a durable contract. Anything else remains undocumented by design.
 
-- **Tests answer:** Does the code behave as expected?
-- **Keystone answers:** Does the project still preserve its defined features?
+Keystone keeps two kinds of documents together:
+
+- active specifications describe implemented behavior that must remain true;
+- `TODO.*.md` documents describe intended behavior that has not been built.
+
+Tests show whether code behaves as expected. Keystone shows whether the code
+matches the product that was defined.
 
 ## Getting started
 
 Give [`agent-prompt.md`](agent-prompt.md) to a coding agent. It drafts the
-feature context, adds `KEYSTONE.md`, updates existing agent guidance, asks
-before creating `AGENTS.md`, and proposes a focused set of essential
-requirements for approval.
+product context, adds `KEYSTONE.md`, updates existing agent guidance, asks
+before creating `AGENTS.md`, and proposes a focused set of active and TODO
+documents for approval.
 
 The setup adds:
 
@@ -30,50 +34,66 @@ your-project/
 └── feature-spec/
     ├── Leash.Settings.md
     ├── Leash.Owners.md
-    └── Leash.Walkers.md
+    ├── Leash.Walkers.md
+    └── TODO.Leash.Walkers.Scheduling.md
 ```
 
-## `KEYSTONE.md` explains the project and guides agents
+## Define as much of the product as needed
 
-This root-level file can explain what is being built, distinguish relevant
-surfaces, and map them to feature names. It stays compatible with `README.md`
-as the human-facing overview and `AGENTS.md` as repository-wide working
-guidance. Its project-specific context is descriptive; essential behavior
-belongs in normative requirements under `feature-spec/`.
+`KEYSTONE.md` explains what is being built, distinguishes relevant surfaces,
+and maps them to feature namespaces. Normative product behavior belongs in the
+Markdown files under `feature-spec/`.
 
-For example, a fictional dog-walking app called Leash could explain that:
+A product can define broad guarantees at a namespace root and add detail in
+descendants. For example, `Leash.md` can define product-wide behavior inherited
+by `Leash.Owners.md` and `Leash.Walkers.md`. A monorepo can instead use separate
+roots such as `Desktop`, `Server`, and `Shared`.
+
+Keystone does not require complete coverage. A project can define one important
+feature, every product surface, or anything in between.
+
+## Distinguish current behavior from intended behavior
+
+An unprefixed file is an active Keystone specification:
 
 ```text
-Leash.Settings.*  describes shared app settings and safety rules.
-Leash.Owners.*    describes the dog-owner experience.
-Leash.Walkers.*   describes the dog-walker experience.
+feature-spec/Leash.Walkers.md
 ```
 
-Read the full [Keystone agent guidance](KEYSTONE.md).
+Its requirements describe implemented, supported behavior. Applicable
+implementation and tests must conform to it.
 
-## Put shared requirements at the namespace root
+A file prefixed with `TODO.` defines behavior that has not been implemented:
 
-A top-level specification holds requirements shared by every descendant in its
-namespace. A single-product project can use a product-named root such as
-`Leash.md` for product-wide guarantees inherited by `Leash.Owners` and
-`Leash.Walkers`. `KEYSTONE.md` describes the product and maps those
-namespaces; `Leash.md` defines the behavior they must preserve.
+```text
+feature-spec/TODO.Leash.Walkers.Scheduling.md
+```
 
-Not every repository needs one project-wide root. A monorepo can use separate
-top-level namespaces such as `Desktop`, `Server`, and `Shared` when those are
-the natural requirement boundaries.
+The prefix is not part of the target feature name, so its first heading remains:
 
-When an agent adds behavior that is not covered by an existing specification,
-it should ask whether the new feature belongs in Keystone's scope. If it does,
-the agent proposes and gets confirmation for the smallest suitable
-specification before writing it. If it does not, the behavior can remain
-undocumented by design.
+```markdown
+# Leash.Walkers.Scheduling
+```
 
-## Describe the features that must stay
+TODO documents are product definitions, not backlog items. They do not assign,
+prioritize, schedule, or authorize work. When someone chooses to implement one,
+its requirements define what the completed feature must do. After the behavior
+is implemented and verified, reconcile it with any matching active
+specification and remove the `TODO.` prefix.
 
-You do not need to document every feature. For each one you want to protect,
-create a Markdown file named after the feature. Describe what it must do, not
-how the code is built.
+An active specification and TODO document may target the same feature:
+
+```text
+feature-spec/Leash.Walkers.md
+feature-spec/TODO.Leash.Walkers.md
+```
+
+The active file governs the current product. The TODO file defines its intended
+replacement or expansion. They must be reconciled when the TODO behavior ships.
+
+## Write product requirements, not implementation instructions
+
+Describe what a feature must do, not how its code is built:
 
 ```markdown
 # Leash.Walkers
@@ -85,24 +105,21 @@ how the code is built.
 - Updating one walker profile MUST NOT change another walker profile.
 ```
 
-Need to describe something more specific? Add another part to the filename,
-separated by a dot. `Leash.Walkers.Availability.md` includes the requirements
-from `Leash.Walkers.md` because its name starts with that name. The new file
-only needs the added requirements for showing walker availability.
+Need something more specific? Add another dot-separated segment.
+`Leash.Walkers.Availability.md` inherits active requirements from
+`Leash.Walkers.md`.
 
-Read the [full specification](SPEC.md) or the
-[worked example](examples/feature-spec/Leash.Walkers.md).
+Read the [full specification](SPEC.md), the
+[active example](examples/feature-spec/Leash.Walkers.md), or the
+[TODO example](examples/feature-spec/TODO.Leash.Walkers.Scheduling.md).
 
 ## Repository map
 
 - Root Markdown files define Keystone and explain how to adopt it.
-- [`examples/`](examples/) contains a small example Keystone specification set.
+- [`examples/`](examples/) contains a small example Keystone collection.
 - [`scripts/`](scripts/) contains the validator and website renderer.
-- [`tests/`](tests/) contains validator tests.
-- [`site/`](site/) contains only the static website and its generated
-  specification page.
-
-Open [`site/index.html`](site/index.html) to view the website locally.
+- [`tests/`](tests/) contains validator and version tests.
+- [`site/`](site/) contains the static website and generated specification page.
 
 ## Validate the examples
 
@@ -115,10 +132,9 @@ The validator uses only the Python standard library.
 
 ## Current status
 
-Keystone `0.1.0` is an early framework release. Its filename, inheritance, and
-exception rules are usable now, but the contract is not final. The validator
-checks document names, headings, removed sections, parent declarations, related
-references, and exception sources.
+Keystone `0.2.0` is an early framework release. Its active specifications,
+TODO documents, filename, inheritance, exception, and reference rules are
+usable now, but the contract is not final.
 
 ## License
 

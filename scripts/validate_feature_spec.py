@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a Feature Spec collection using only the Python standard library."""
+"""Validate a Keystone feature-spec collection using only the standard library."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9-]*(?:\.[A-Za-z][A-Za-z0-9-]*)*$"
 REFERENCE_PATTERN = re.compile(r"^- `([^`]+)`\s*$")
 SOURCE_PATTERN = re.compile(r"^Source:\s*`([^`]+)`\s*$")
 REMOVED_SECTIONS = {"Status", "Verification"}
+TODO_PREFIX = "TODO."
 
 
 @dataclass(frozen=True)
@@ -21,6 +22,7 @@ class Document:
     name: str
     path: Path
     lines: list[str]
+    is_todo: bool
 
 
 def section_lines(document: Document, title: str) -> list[tuple[int, str]]:
@@ -46,18 +48,20 @@ def load_documents(root: Path) -> tuple[dict[str, Document], list[str]]:
     documents: dict[str, Document] = {}
     errors: list[str] = []
     for path in sorted(root.glob("*.md")):
-        name = path.stem
+        identifier = path.stem
+        is_todo = identifier.startswith(TODO_PREFIX)
+        name = identifier.removeprefix(TODO_PREFIX) if is_todo else identifier
         if not NAME_PATTERN.fullmatch(name):
-            errors.append(f"{path}: invalid canonical name {name!r}")
+            errors.append(f"{path}: invalid feature name {name!r}")
             continue
         lines = path.read_text(encoding="utf-8").splitlines()
         expected = f"# {name}"
         actual = lines[0] if lines else ""
         if actual != expected:
             errors.append(f"{path}: first line must be {expected!r}")
-        if name in documents:
-            errors.append(f"{path}: duplicate canonical name {name!r}")
-        documents[name] = Document(name, path, lines)
+        if identifier in documents:
+            errors.append(f"{path}: duplicate document name {identifier!r}")
+        documents[identifier] = Document(name, path, lines, is_todo)
     if not documents:
         errors.append(f"{root}: no specification Markdown files found")
     return documents, errors
@@ -74,6 +78,11 @@ def validate_references(documents: dict[str, Document]) -> list[str]:
             if reference not in documents:
                 errors.append(
                     f"{document.path}:{number}: unknown related specification {reference!r}"
+                )
+            elif not document.is_todo and documents[reference].is_todo:
+                errors.append(
+                    f"{document.path}:{number}: active specifications must not depend "
+                    f"on TODO document {reference!r}"
                 )
     return errors
 
@@ -96,7 +105,11 @@ def validate_sections(documents: dict[str, Document]) -> list[str]:
 def validate_exceptions(documents: dict[str, Document]) -> list[str]:
     errors: list[str] = []
     for document in documents.values():
-        valid_sources = set(ancestors(document.name)) & documents.keys()
+        active_sources = set(ancestors(document.name)) & documents.keys()
+        todo_sources = {
+            f"{TODO_PREFIX}{name}" for name in ancestors(document.name)
+        } & documents.keys()
+        valid_sources = active_sources | (todo_sources if document.is_todo else set())
         for number, line in section_lines(document, "Exceptions"):
             match = SOURCE_PATTERN.fullmatch(line)
             if not match:
@@ -105,7 +118,7 @@ def validate_exceptions(documents: dict[str, Document]) -> list[str]:
             if source not in valid_sources:
                 errors.append(
                     f"{document.path}:{number}: exception source {source!r} "
-                    "must be an existing namespace parent"
+                    "must be an applicable existing namespace parent"
                 )
     return errors
 
@@ -129,7 +142,13 @@ def main() -> int:
             print(f"error: {error}", file=sys.stderr)
         return 1
 
-    print(f"Validated {len(documents)} Feature Spec documents in {root}")
+    active_count = sum(not document.is_todo for document in documents.values())
+    todo_count = sum(document.is_todo for document in documents.values())
+    todo_label = "TODO document" if todo_count == 1 else "TODO documents"
+    print(
+        f"Validated {active_count} active specifications and "
+        f"{todo_count} {todo_label} in {root}"
+    )
     return 0
 
 
